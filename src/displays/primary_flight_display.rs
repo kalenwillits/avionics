@@ -6,13 +6,16 @@ pub struct PrimaryFlightDisplay;
 impl Plugin for PrimaryFlightDisplay {
     fn build(&self, app: &mut App) {
         app
-            .add_systems(Startup, spawn_ui);
+            .add_systems(Startup, (
+                    spawn_crosshairs,
+                    spawn_artifical_horizon,
+                ));
     }
 }
 
 
 
-fn spawn_ui(mut commands: Commands) {
+fn spawn_artifical_horizon(mut commands: Commands) {
     commands
         .spawn((
             NodeBundle {
@@ -21,6 +24,7 @@ fn spawn_ui(mut commands: Commands) {
                     height: Val::Percent(100.0),
                     flex_direction: FlexDirection::Column,
                     align_items: AlignItems::Center,
+                    position_type: PositionType::Absolute,
                     ..default()
                 },
                 transform: Transform {
@@ -32,6 +36,7 @@ fn spawn_ui(mut commands: Commands) {
             Name::new("ArtificialHorizon")
             ))
     .with_children(|parent| {
+
         parent.spawn((
                 NodeBundle {
                     style: Style {
@@ -44,10 +49,10 @@ fn spawn_ui(mut commands: Commands) {
                         scale: (1.0, 2.0, 1.0).into(),
                         ..default()
                     },
-                    background_color: Color::BLUE.into(),
+                    background_color: Color::rgb(0.0, 0.5, 1.0).into(),
                     ..default()
                 },
-                Name::new("BlueHorizon")
+                Name::new("AboveHorizon")
         ));
 
         parent.spawn((
@@ -56,21 +61,102 @@ fn spawn_ui(mut commands: Commands) {
                         width: Val::Percent(100.0),
                         height: Val::Percent(50.0),
                         align_items: AlignItems::Center,
+                        border: UiRect::top(Val::Px(2.0)),
                         ..default()
                     },
                     transform: Transform {
-                        scale: (1.0, 1.1, 1.0).into(),
+                        scale: (1.0, 1.0, 1.0).into(),
                         ..default()
                     },
-                    background_color: Color::ORANGE.into(),
+                    background_color: Color::rgb(0.25, 0.25, 0.25).into(),
+                    border_color: Color::WHITE.into(),
                     ..default()
                 },
-                Name::new("BrownHorizon")
+                Name::new("BelowHorizon")
         ));
 
 
+        });
+
+}
 
 
-    });
 
+fn spawn_crosshairs(
+        mut commands: Commands
+) {
+    commands
+        .spawn((
+            NodeBundle {
+                style: Style {
+                    width: Val::Percent(100.0),
+                    height: Val::Percent(100.0),
+                    flex_direction: FlexDirection::Column,
+                    align_items: AlignItems::Center,
+                    position_type: PositionType::Absolute,
+                    justify_content: JustifyContent::Center,
+                    ..default()
+                },
+                z_index: ZIndex::Local(1),
+                ..default()
+            }, 
+            Name::new("Crosshairs")
+            )).with_children(|parent| {
+                parent.spawn(
+                    NodeBundle {
+                        style: Style {
+                            width: Val::Px(512.0),
+                            top: Val::Px(15.0),
+                            justify_content: JustifyContent::SpaceEvenly,
+                            ..default()
+                        },
+                        ..default()
+                    }
+                ).with_children(|parent| {
+                    parent.spawn(
+                    NodeBundle {
+                        style: Style {
+                            width: Val::Px(96.0),
+                            height: Val::Px(32.0),
+                            border: UiRect {
+                                top: Val::Px(6.0),
+                                right: Val::Px(6.0),
+                                ..default()
+                            },
+                            ..default()
+                        },
+                        border_color: Color::YELLOW.into(),
+                        ..default()
+                    });
+                    parent.spawn(
+                    NodeBundle {
+                        style: Style {
+                            width: Val::Px(16.0),
+                            height: Val::Px(16.0),
+                            top: Val::Px(-5.0),
+                            border: UiRect::all(Val::Px(6.0)),
+                            ..default()
+                        },
+                        border_color: Color::YELLOW.into(),
+                        ..default()
+                    });
+                    parent.spawn(
+                    NodeBundle {
+                        style: Style {
+                            width: Val::Px(96.0),
+                            height: Val::Px(32.0),
+                            border: UiRect {
+                                top: Val::Px(6.0),
+                                left: Val::Px(6.0),
+                                ..default()
+                            },
+                            ..default()
+                        },
+                        border_color: Color::YELLOW.into(),
+                        ..default()
+                    });
+
+                });
+
+        });
 }

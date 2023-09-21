@@ -7,6 +7,7 @@ use bevy::prelude::*;
 use displays::PrimaryFlightDisplay;
 
 
+const STEAM_DECK_RESOLUTION: (f32, f32) = (1280f32, 800f32);
 
 
 fn main() {
@@ -16,7 +17,7 @@ fn main() {
                 set(WindowPlugin {
                     primary_window: Some(Window {
                         title: "Avionics".into(),
-                        resolution: (640.0, 480.0).into(),
+                        resolution: STEAM_DECK_RESOLUTION.into(),
                         resizable: false,
                         ..default()
                     }),
