@@ -23,17 +23,25 @@ fn spawn_ui(mut commands: Commands) {
                     align_items: AlignItems::Center,
                     ..default()
                 },
+                transform: Transform {
+                    scale: (1.6, 1.7, 1.0).into(),
+                    ..default()
+                },
                 ..default()
             }, 
-            Name::new("ui")
+            Name::new("ArtificialHorizon")
             ))
     .with_children(|parent| {
         parent.spawn((
                 NodeBundle {
                     style: Style {
-                        width: Val::Percent(120.0),
+                        width: Val::Percent(100.0),
                         height: Val::Percent(50.0),
                         align_items: AlignItems::Center,
+                        ..default()
+                    },
+                    transform: Transform {
+                        scale: (1.0, 2.0, 1.0).into(),
                         ..default()
                     },
                     background_color: Color::BLUE.into(),
@@ -45,9 +53,13 @@ fn spawn_ui(mut commands: Commands) {
         parent.spawn((
                 NodeBundle {
                     style: Style {
-                        width: Val::Percent(120.0),
+                        width: Val::Percent(100.0),
                         height: Val::Percent(50.0),
                         align_items: AlignItems::Center,
+                        ..default()
+                    },
+                    transform: Transform {
+                        scale: (1.0, 1.1, 1.0).into(),
                         ..default()
                     },
                     background_color: Color::ORANGE.into(),
