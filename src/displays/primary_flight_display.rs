@@ -6,25 +6,59 @@ pub struct PrimaryFlightDisplay;
 impl Plugin for PrimaryFlightDisplay {
     fn build(&self, app: &mut App) {
         app
-            .add_systems(Startup, setup);
+            .add_systems(Startup, spawn_ui);
     }
 }
 
-fn setup(
-    mut commands: Commands,
-    mut meshes: ResMut<Assets<Mesh>>,
-    mut materials: ResMut<Assets<ColorMaterial>>,
-) {
-commands.spawn(Camera2dBundle::default());
 
-// Rectangle
-    commands.spawn(SpriteBundle {
-        sprite: Sprite {
-            color: Color::rgb(0.25, 0.25, 0.75),
-            custom_size: Some(Vec2::new(50.0, 100.0)),
-            ..default()
-        },
-        transform: Transform::from_translation(Vec3::new(-50., 0., 0.)),
-        ..default()
+
+fn spawn_ui(mut commands: Commands) {
+    commands
+        .spawn((
+            NodeBundle {
+                style: Style {
+                    width: Val::Percent(100.0),
+                    height: Val::Percent(100.0),
+                    flex_direction: FlexDirection::Column,
+                    align_items: AlignItems::Center,
+                    ..default()
+                },
+                ..default()
+            }, 
+            Name::new("ui")
+            ))
+    .with_children(|parent| {
+        parent.spawn((
+                NodeBundle {
+                    style: Style {
+                        width: Val::Percent(120.0),
+                        height: Val::Percent(50.0),
+                        align_items: AlignItems::Center,
+                        ..default()
+                    },
+                    background_color: Color::BLUE.into(),
+                    ..default()
+                },
+                Name::new("BlueHorizon")
+        ));
+
+        parent.spawn((
+                NodeBundle {
+                    style: Style {
+                        width: Val::Percent(120.0),
+                        height: Val::Percent(50.0),
+                        align_items: AlignItems::Center,
+                        ..default()
+                    },
+                    background_color: Color::ORANGE.into(),
+                    ..default()
+                },
+                Name::new("BrownHorizon")
+        ));
+
+
+
+
     });
+
 }
