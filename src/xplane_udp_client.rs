@@ -16,23 +16,36 @@ impl Plugin for XPlaneUdpClient {
             .insert_resource( ClientConfig {
                 socket: UdpSocket::bind("0.0.0.0:49000").unwrap()
             })
-            .add_systems(Update, (poll_aircraft_state, print_aircraft_state));
+            .add_systems(Startup, setup)
+            .add_systems(Update, poll_aircraft_state);
+            // .add_systems(Update, print_aircraft_state);
     }
 }
 
 
+#[derive(Component)]
+pub struct TickRate {
+    timer: Timer,
+}
+
+
 #[derive(Resource, Debug)]
-struct AircraftState {
-    pitch: f32,
-    roll: f32,
-    magnetic_heading: f32,
-    true_heading: f32,
+pub struct AircraftState {
+    pub pitch: f32,
+    pub roll: f32,
+    pub magnetic_heading: f32,
+    pub true_heading: f32,
 }
 
 #[derive(Resource)]
-struct ClientConfig {
+pub struct ClientConfig {
     socket: UdpSocket,
 } 
+
+
+fn setup(mut commands: Commands) {
+    commands.spawn(TickRate {timer: Timer::from_seconds(0.05, TimerMode::Repeating)});
+}
 
 
 
@@ -40,8 +53,15 @@ struct ClientConfig {
 
 fn poll_aircraft_state(
     client_config: Res<ClientConfig>, 
-    mut aircraft_state: ResMut<AircraftState>
+    mut aircraft_state: ResMut<AircraftState>,
+    time: Res<Time>,
+    mut tick_rate_queryset: Query<&mut TickRate>,
     ) {
+    for mut tick_rate in &mut tick_rate_queryset {
+        tick_rate.timer.tick(time.delta());
+        if !tick_rate.timer.finished() {
+            return;
+        }
         let mut buffer = [0; 1024];
         let (amount, _src) = client_config.socket.recv_from(&mut buffer).unwrap();
         let data = &buffer[..amount];
@@ -103,7 +123,8 @@ fn poll_aircraft_state(
 
             }
 }
-
-fn print_aircraft_state(aircraft_state: Res<AircraftState>) {
-    println!("{:?}", aircraft_state);
 }
+
+// fn print_aircraft_state(aircraft_state: Res<AircraftState>) {
+//     println!("{:?}", aircraft_state);
+// }

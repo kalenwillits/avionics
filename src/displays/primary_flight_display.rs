@@ -1,4 +1,5 @@
 use bevy::prelude::*;
+use crate::xplane_udp_client::AircraftState;
 
 
 pub struct PrimaryFlightDisplay;
@@ -9,9 +10,13 @@ impl Plugin for PrimaryFlightDisplay {
             .add_systems(Startup, (
                     spawn_crosshairs,
                     spawn_artifical_horizon,
-                ));
+                ))
+            .add_systems(Update, update_attitide_indicator_roll_system);
     }
 }
+
+#[derive(Component)]
+struct ArtificalHorizon;
 
 
 
@@ -33,7 +38,8 @@ fn spawn_artifical_horizon(mut commands: Commands) {
                 },
                 ..default()
             }, 
-            Name::new("ArtificialHorizon")
+            Name::new("ArtificialHorizon"),
+            ArtificalHorizon {},
             ))
     .with_children(|parent| {
 
@@ -159,4 +165,15 @@ fn spawn_crosshairs(
                 });
 
         });
+}
+
+fn update_attitide_indicator_roll_system(aircraft_state: Res<AircraftState>, mut artifical_horizon_queryset: Query<&mut Transform, With<ArtificalHorizon>>) {
+    // let mut artifical_horizon_transform = artifical_horizon_queryset.single();
+    for mut transform in artifical_horizon_queryset.iter_mut() {
+        // transform.rotation.z = aircraft_state.roll;
+        let radians: f32 = transform.rotation.z - aircraft_state.roll;
+        transform.rotate_z(radians);
+    }
+    // let radians: f32 = artifical_horizon_transform.rotation.z - aircraft_state.roll;
+    // artifical_horizon_transform.rotate_z(radians);
 }
