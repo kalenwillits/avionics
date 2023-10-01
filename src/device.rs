@@ -23,8 +23,6 @@ fn setup(
 enum DisplayState {
     #[default]
     PrimaryFlightDisplay,
-    MultiFunctionDisplay,
-    GlobalPositioningSystem,
     Off,
 }
 

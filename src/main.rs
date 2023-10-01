@@ -1,10 +1,9 @@
 mod device;
 mod displays;
+mod xplane_udp_client;
 
-use device::Device;
 use bevy_inspector_egui::quick::WorldInspectorPlugin;
 use bevy::prelude::*;
-use displays::PrimaryFlightDisplay;
 
 
 const STEAM_DECK_RESOLUTION: (f32, f32) = (1280f32, 800f32);
@@ -24,8 +23,9 @@ fn main() {
                     ..default()
                 }), 
                 WorldInspectorPlugin::default(),
-                Device, 
-                PrimaryFlightDisplay,
+                device::Device, 
+                xplane_udp_client::XPlaneUdpClient,
+                displays::PrimaryFlightDisplay,
             ))
         .run();
 }
