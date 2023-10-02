@@ -1,6 +1,7 @@
 mod device;
 mod displays;
 mod xplane_udp_client;
+mod xplane_listener;
 
 use bevy_inspector_egui::quick::WorldInspectorPlugin;
 use bevy::prelude::*;
@@ -24,7 +25,8 @@ fn main() {
                 }), 
                 WorldInspectorPlugin::default(),
                 device::Device, 
-                xplane_udp_client::XPlaneUdpClient,
+                // xplane_udp_client::XPlaneUdpClient,
+                xplane_listener::XPlaneListener,
                 displays::PrimaryFlightDisplay,
             ))
         .run();

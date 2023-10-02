@@ -304,6 +304,7 @@ dependencies = [
  "bevy-inspector-egui",
  "bevy_renet",
  "bincode",
+ "futures-lite",
  "local-ip-address",
  "serde",
  "tokio",
