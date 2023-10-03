@@ -158,7 +158,7 @@ fn consume_aircraft_state_system(
         let mut transform = artifical_horizon_queryset.single_mut();
         // TODO - interpolate
         if let Some(roll) = aircraft_state.roll {
-            transform.rotation.z = degrees_to_radians(roll);
+            transform.rotation.z = degrees_to_radians(roll) * -0.5;
         }
         commands.entity(entity).despawn();
     }
