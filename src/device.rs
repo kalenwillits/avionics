@@ -1,21 +1,14 @@
 use bevy::prelude::*;
 
-
 pub struct Device;
 
 impl Plugin for Device {
     fn build(&self, app: &mut App) {
-        app
-            .add_state::<DisplayState>()
-            .add_systems(Startup, setup);
+        app.add_state::<DisplayState>().add_systems(Startup, setup);
     }
 }
 
-
-fn setup(
-    mut commands: Commands,
-    
-) {
+fn setup(mut commands: Commands) {
     commands.spawn(Camera2dBundle::default());
 }
 
@@ -25,4 +18,3 @@ enum DisplayState {
     PrimaryFlightDisplay,
     Off,
 }
-

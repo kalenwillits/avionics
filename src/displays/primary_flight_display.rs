@@ -1,24 +1,17 @@
-use bevy::prelude::*;
 use crate::xplane_listener::AircraftState;
-
+use bevy::prelude::*;
 
 pub struct PrimaryFlightDisplay;
 
 impl Plugin for PrimaryFlightDisplay {
     fn build(&self, app: &mut App) {
-        app
-            .add_systems(Startup, (
-                    spawn_crosshairs,
-                    spawn_artifical_horizon,
-                ));
-            // .add_systems(Update, update_attitide_indicator_roll_system);
+        app.add_systems(Startup, (spawn_crosshairs, spawn_artifical_horizon));
+        // .add_systems(Update, update_attitide_indicator_roll_system);
     }
 }
 
 #[derive(Component)]
 struct ArtificalHorizon;
-
-
 
 fn spawn_artifical_horizon(mut commands: Commands) {
     commands
@@ -37,12 +30,12 @@ fn spawn_artifical_horizon(mut commands: Commands) {
                     ..default()
                 },
                 ..default()
-            }, 
+            },
             Name::new("ArtificialHorizon"),
             ArtificalHorizon {},
-            ))
-    .with_children(|parent| {
-        parent.spawn((
+        ))
+        .with_children(|parent| {
+            parent.spawn((
                 NodeBundle {
                     style: Style {
                         width: Val::Percent(100.0),
@@ -57,10 +50,10 @@ fn spawn_artifical_horizon(mut commands: Commands) {
                     background_color: Color::rgb(0.0, 0.5, 1.0).into(),
                     ..default()
                 },
-                Name::new("AboveHorizon")
-        ));
+                Name::new("AboveHorizon"),
+            ));
 
-        parent.spawn((
+            parent.spawn((
                 NodeBundle {
                     style: Style {
                         width: Val::Percent(100.0),
@@ -77,19 +70,12 @@ fn spawn_artifical_horizon(mut commands: Commands) {
                     border_color: Color::WHITE.into(),
                     ..default()
                 },
-                Name::new("BelowHorizon")
-        ));
-
-
+                Name::new("BelowHorizon"),
+            ));
         });
-
 }
 
-
-
-fn spawn_crosshairs(
-        mut commands: Commands
-) {
+fn spawn_crosshairs(mut commands: Commands) {
     commands
         .spawn((
             NodeBundle {
@@ -104,22 +90,22 @@ fn spawn_crosshairs(
                 },
                 z_index: ZIndex::Local(1),
                 ..default()
-            }, 
-            Name::new("Crosshairs")
-            )).with_children(|parent| {
-                parent.spawn(
-                    NodeBundle {
-                        style: Style {
-                            width: Val::Px(512.0),
-                            top: Val::Px(15.0),
-                            justify_content: JustifyContent::SpaceEvenly,
-                            ..default()
-                        },
+            },
+            Name::new("Crosshairs"),
+        ))
+        .with_children(|parent| {
+            parent
+                .spawn(NodeBundle {
+                    style: Style {
+                        width: Val::Px(512.0),
+                        top: Val::Px(15.0),
+                        justify_content: JustifyContent::SpaceEvenly,
                         ..default()
-                    }
-                ).with_children(|parent| {
-                    parent.spawn(
-                    NodeBundle {
+                    },
+                    ..default()
+                })
+                .with_children(|parent| {
+                    parent.spawn(NodeBundle {
                         style: Style {
                             width: Val::Px(96.0),
                             height: Val::Px(32.0),
@@ -133,8 +119,7 @@ fn spawn_crosshairs(
                         border_color: Color::YELLOW.into(),
                         ..default()
                     });
-                    parent.spawn(
-                    NodeBundle {
+                    parent.spawn(NodeBundle {
                         style: Style {
                             width: Val::Px(16.0),
                             height: Val::Px(16.0),
@@ -145,8 +130,7 @@ fn spawn_crosshairs(
                         border_color: Color::YELLOW.into(),
                         ..default()
                     });
-                    parent.spawn(
-                    NodeBundle {
+                    parent.spawn(NodeBundle {
                         style: Style {
                             width: Val::Px(96.0),
                             height: Val::Px(32.0),
@@ -160,9 +144,7 @@ fn spawn_crosshairs(
                         border_color: Color::YELLOW.into(),
                         ..default()
                     });
-
                 });
-
         });
 }
 
