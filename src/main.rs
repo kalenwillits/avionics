@@ -1,6 +1,5 @@
 mod device;
 mod displays;
-mod xplane_udp_client;
 mod xplane_listener;
 
 use bevy_inspector_egui::quick::WorldInspectorPlugin;
