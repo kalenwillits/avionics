@@ -1,3 +1,4 @@
+use crate::utils::degrees_to_radians;
 use crate::xplane_listener::AircraftState;
 use bevy::prelude::*;
 
@@ -5,8 +6,8 @@ pub struct PrimaryFlightDisplay;
 
 impl Plugin for PrimaryFlightDisplay {
     fn build(&self, app: &mut App) {
-        app.add_systems(Startup, (spawn_crosshairs, spawn_artifical_horizon));
-        // .add_systems(Update, update_attitide_indicator_roll_system);
+        app.add_systems(Startup, (spawn_crosshairs, spawn_artifical_horizon))
+            .add_systems(Update, consume_aircraft_state_system);
     }
 }
 
@@ -116,7 +117,7 @@ fn spawn_crosshairs(mut commands: Commands) {
                             },
                             ..default()
                         },
-                        border_color: Color::YELLOW.into(),
+                        border_color: Color::rgb(1.0, 0.5, 0.0).into(),
                         ..default()
                     });
                     parent.spawn(NodeBundle {
@@ -127,7 +128,7 @@ fn spawn_crosshairs(mut commands: Commands) {
                             border: UiRect::all(Val::Px(6.0)),
                             ..default()
                         },
-                        border_color: Color::YELLOW.into(),
+                        border_color: Color::rgb(1.0, 0.5, 0.0).into(),
                         ..default()
                     });
                     parent.spawn(NodeBundle {
@@ -141,20 +142,24 @@ fn spawn_crosshairs(mut commands: Commands) {
                             },
                             ..default()
                         },
-                        border_color: Color::YELLOW.into(),
+                        border_color: Color::rgb(1.0, 0.5, 0.0).into(),
                         ..default()
                     });
                 });
         });
 }
 
-// fn update_attitide_indicator_roll_system(aircraft_state: Res<AircraftState>, mut artifical_horizon_queryset: Query<&mut Transform, With<ArtificalHorizon>>) {
-//     // let mut artifical_horizon_transform = artifical_horizon_queryset.single();
-//     for mut transform in artifical_horizon_queryset.iter_mut() {
-//         // transform.rotation.z = aircraft_state.roll;
-//         // let radians: f32 = transform.rotation.z - aircraft_state.roll;
-//         // transform.rotate_z(radians);
-//     }
-//     // let radians: f32 = artifical_horizon_transform.rotation.z - aircraft_state.roll;
-//     // artifical_horizon_transform.rotate_z(radians);
-// }
+fn consume_aircraft_state_system(
+    mut commands: Commands,
+    mut aircraft_state_queryset: Query<(Entity, &mut AircraftState)>,
+    mut artifical_horizon_queryset: Query<&mut Transform, With<ArtificalHorizon>>,
+) {
+    for (entity, aircraft_state) in aircraft_state_queryset.iter_mut() {
+        let mut transform = artifical_horizon_queryset.single_mut();
+        // TODO - interpolate
+        if let Some(roll) = aircraft_state.roll {
+            transform.rotation.z = degrees_to_radians(roll);
+        }
+        commands.entity(entity).despawn();
+    }
+}

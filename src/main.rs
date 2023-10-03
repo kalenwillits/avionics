@@ -1,5 +1,6 @@
 mod device;
-mod displays;
+mod primary_flight_display;
+mod utils;
 mod xplane_listener;
 
 use bevy::prelude::*;
@@ -23,7 +24,7 @@ fn main() {
             device::Device,
             // xplane_udp_client::XPlaneUdpClient,
             xplane_listener::XPlaneListener,
-            displays::PrimaryFlightDisplay,
+            primary_flight_display::PrimaryFlightDisplay,
         ))
         .run();
 }

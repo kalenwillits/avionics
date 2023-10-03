@@ -6,12 +6,11 @@ use std::convert::TryInto;
 use std::net::UdpSocket;
 
 const DEFAULT_ADDRESS: &str = "0.0.0.0:49000";
-const BYTE_SIZE: usize = 4;
 
 pub struct XPlaneListener;
 
-type Record = HashMap<usize, f32>;
-type Payload = HashMap<usize, Record>;
+type Record = HashMap<i32, f32>;
+type Payload = HashMap<i32, Record>;
 
 impl Plugin for XPlaneListener {
     fn build(&self, app: &mut App) {
@@ -30,12 +29,12 @@ pub struct Network {
     socket: UdpSocket,
 }
 
-#[derive(Component, Default)]
+#[derive(Component, Default, Debug)]
 pub struct AircraftState {
-    pitch: Option<f32>,
-    roll: Option<f32>,
-    magnetic_heading: Option<f32>,
-    true_heading: Option<f32>,
+    pub pitch: Option<f32>,
+    pub roll: Option<f32>,
+    pub magnetic_heading: Option<f32>,
+    pub true_heading: Option<f32>,
 }
 
 impl AircraftState {
@@ -100,7 +99,7 @@ pub fn resolve_task_system(
     }
 }
 
-pub fn get(payload: &Payload, i: usize, j: usize) -> Option<f32> {
+pub fn get(payload: &Payload, i: i32, j: i32) -> Option<f32> {
     match payload.get(&i) {
         Some(record) => match record.get(&j) {
             Some(value) => Some(*value),
@@ -111,10 +110,10 @@ pub fn get(payload: &Payload, i: usize, j: usize) -> Option<f32> {
 }
 
 fn process_udp_data(data: &[u8], count: &usize) -> Result<Payload, ()> {
-    if &data[..BYTE_SIZE] == b"DATA" {
+    if &data[..4] == b"DATA" {
         let mut payload: Payload = Payload::new();
         // Check if the data length is not a multiple of 36 (invalid data)
-        let raw = &data[(BYTE_SIZE + 1)..*count];
+        let raw = &data[(4 + 1)..*count];
         if raw.len() % 36 != 0 {
             return Err(());
         }
@@ -125,8 +124,14 @@ fn process_udp_data(data: &[u8], count: &usize) -> Result<Payload, ()> {
         // Iterate through each record and process it
         for i in 0..num_records {
             let record_data = &raw[i * 36..(i + 1) * 36];
+            // Extract the record number (first 4 bytes) and convert it to an integer
+            let record_index = i32::from_le_bytes(
+                record_data[..4]
+                    .try_into()
+                    .expect("Failed to read bytes while gathering record number!"),
+            );
             if let Ok(record) = process_record(record_data) {
-                payload.insert(i, record);
+                payload.insert(record_index, record);
             }
         }
         return Ok(payload);
@@ -136,12 +141,6 @@ fn process_udp_data(data: &[u8], count: &usize) -> Result<Payload, ()> {
 
 fn process_record(record_data: &[u8]) -> Result<Record, ()> {
     let mut record: Record = Record::new();
-    // Extract the record number (first 4 bytes) and convert it to an integer
-    let record_number = i32::from_le_bytes(
-        record_data[..4]
-            .try_into()
-            .expect("Failed to read bytes while gathering record number!"),
-    );
 
     // Extract the record values (remaining 32 bytes)
     let record_values = &record_data[4..];
@@ -154,7 +153,7 @@ fn process_record(record_data: &[u8]) -> Result<Record, ()> {
                 .try_into()
                 .expect("Failed to read bytes when gathering record value!"),
         );
-        record.insert(i, value);
+        record.insert(i as i32, value);
     }
     Ok(record)
 }
