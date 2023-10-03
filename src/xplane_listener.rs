@@ -134,14 +134,11 @@ fn process_udp_data(data: &[u8], count: &usize) -> Result<Payload, ()> {
         // Check if the data length is not a multiple of 36 (invalid data)
         let raw = &data[(BYTE_SIZE + 1)..*count];
         if raw.len() % 36 != 0 {
-            println!("Invalid data length");
             return Err(());
         }
 
         // Calculate the number of records in the received data
         let num_records = raw.len() / 36;
-
-        println!("Received {} records", num_records);
 
         // Iterate through each record and process it
         for i in 0..num_records {
@@ -164,15 +161,10 @@ fn process_record(record_data: &[u8]) -> Result<Record, ()> {
     // Extract the record values (remaining 32 bytes)
     let record_values = &record_data[4..];
 
-    // Print the record number
-    println!("Record #{}", record_number);
-
     // Iterate through the 8 values within the record
     for i in 0..8 {
         let offset = i * 4; // Offset to the start of each value (4 bytes each)
-        // Extract the value as a 32-bit floating-point number and print it
         let value = f32::from_le_bytes(record_values[offset..offset + 4].try_into().unwrap());
-        println!("Value {}: {:.4}", i + 1, value);
         record.insert(i, value);
     }
     Ok(record)
