@@ -154,5 +154,6 @@ fn consume_aircraft_state_system(
     mut artifical_horizon_queryset: Query<&mut Transform, With<ArtificalHorizon>>,
 ) {
     let mut transform = artifical_horizon_queryset.single_mut();
-    transform.rotation.z = degrees_to_radians(aircraft_state.roll.interpolate(aircraft_state.time)) * 0.5;
+    // let new_rotation = aircraft_state.roll.interpolate(aircraft_state.time);
+    transform.rotation.z = degrees_to_radians(aircraft_state.roll.interpolate(aircraft_state.time)) * -0.5;
 }

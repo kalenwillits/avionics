@@ -4,6 +4,7 @@ use futures_lite::future;
 use std::collections::HashMap;
 use std::convert::TryInto;
 use std::net::UdpSocket;
+use interpolation::Lerp;
 
 const DEFAULT_ADDRESS: &str = "0.0.0.0:49000";
 
@@ -87,7 +88,8 @@ impl TimeFrame {
                 let timedelta: f32 = next.timestamp - time;
                 let delta_factor: f32 = latency / timedelta;
                 let value_delta: f32 = (next.value - key.value) * delta_factor;
-                return key.value + value_delta;
+                return key.value.lerp(&next.value, &delta_factor);
+                // return key.value + value_delta;
             } else {
                 // No next frame has been placed yet.
                 return key.value;
