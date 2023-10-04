@@ -22,7 +22,6 @@ fn main() {
             }),
             WorldInspectorPlugin::default(),
             device::Device,
-            // xplane_udp_client::XPlaneUdpClient,
             xplane_listener::XPlaneListener,
             primary_flight_display::PrimaryFlightDisplay,
         ))

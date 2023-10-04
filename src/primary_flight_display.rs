@@ -150,16 +150,12 @@ fn spawn_crosshairs(mut commands: Commands) {
 }
 
 fn consume_aircraft_state_system(
-    mut commands: Commands,
-    mut aircraft_state_queryset: Query<(Entity, &mut AircraftState)>,
+    aircraft_state: Res<AircraftState>,
     mut artifical_horizon_queryset: Query<&mut Transform, With<ArtificalHorizon>>,
 ) {
-    for (entity, aircraft_state) in aircraft_state_queryset.iter_mut() {
-        let mut transform = artifical_horizon_queryset.single_mut();
-        // TODO - interpolate
-        if let Some(roll) = aircraft_state.roll {
-            transform.rotation.z = degrees_to_radians(roll) * -0.5;
-        }
-        commands.entity(entity).despawn();
-    }
+    let mut transform = artifical_horizon_queryset.single_mut();
+    transform.rotation.z = degrees_to_radians(aircraft_state.roll.interpolate(aircraft_state.time)) * 0.5;
+    // if let Some(roll) = aircraft_state.roll {
+    // transform.rotation.z = degrees_to_radians(roll) * -0.5;
+    // }
 }
