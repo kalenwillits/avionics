@@ -9,8 +9,6 @@ const DEFAULT_ADDRESS: &str = "0.0.0.0:49000";
 
 pub struct XPlaneListener;
 
-// type Record = HashMap<i32, f32>;
-// type Payload = HashMap<i32, Record>;
 
 impl Plugin for XPlaneListener {
     fn build(&self, app: &mut App) {
@@ -87,7 +85,7 @@ impl TimeFrame {
             if let Some(next) = self.next {
                 let latency: f32 = next.timestamp - key.timestamp;
                 let timedelta: f32 = next.timestamp - time;
-                let delta_factor: f32 = timedelta / latency;
+                let delta_factor: f32 = latency / timedelta;
                 let value_delta: f32 = (next.value - key.value) * delta_factor;
                 return key.value + value_delta;
             } else {
@@ -144,9 +142,7 @@ fn setup(mut commands: Commands) {
 
 pub fn spawn_task(commands: &mut Commands, target: Entity, socket: UdpSocket) {
     let pool = AsyncComputeTaskPool::get();
-    // let network_clone = network.clone();
     let task = pool.spawn(async move {
-        // Blocking UDP Listener
         let mut buf = [0; 1024];
         let (count, _source) = socket
             .recv_from(&mut buf)
@@ -209,9 +205,6 @@ fn process_udp_data(data: &[u8], count: &usize) -> Result<Payload, ()> {
                     .try_into()
                     .expect("Failed to read bytes while gathering record number!"),
             );
-            // if let Ok(record) = process_record(record_data) {
-            //     payload.insert(record_index, record);
-            // }
             // Extract the record values (remaining 32 bytes)
             let record_values = &record_data[4..];
 
