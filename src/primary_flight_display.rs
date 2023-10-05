@@ -1,7 +1,6 @@
 use crate::utils::degrees_to_radians;
 use crate::xplane_listener::AircraftState;
 use bevy::prelude::*;
-use interpolation::Lerp;
 
 pub struct PrimaryFlightDisplay;
 
