@@ -9,7 +9,6 @@ const DEFAULT_ADDRESS: &str = "0.0.0.0:49000";
 
 pub struct XPlaneListener;
 
-
 impl Plugin for XPlaneListener {
     fn build(&self, app: &mut App) {
         AsyncComputeTaskPool::init(|| TaskPool::new());
@@ -66,7 +65,6 @@ impl Payload {
 pub struct Network {
     socket: UdpSocket,
 }
-
 
 #[derive(Resource, Default, Debug)]
 pub struct AircraftState {
