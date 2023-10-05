@@ -4,7 +4,6 @@ use futures_lite::future;
 use std::collections::HashMap;
 use std::convert::TryInto;
 use std::net::UdpSocket;
-use interpolation::Lerp;
 
 const DEFAULT_ADDRESS: &str = "0.0.0.0:49000";
 
@@ -68,66 +67,32 @@ pub struct Network {
     socket: UdpSocket,
 }
 
-#[derive(Default, Debug, Clone, Copy)]
-pub struct TimeKey {
-    timestamp: f32,
-    value: f32,
-}
-
-#[derive(Default, Debug)]
-pub struct TimeFrame {
-    pub key: Option<TimeKey>,
-    pub next: Option<TimeKey>,
-}
-
-impl TimeFrame {
-    pub fn interpolate(&self, time: f32) -> f32 {
-        if let Some(key) = self.key {
-            if let Some(next) = self.next {
-                let latency: f32 = next.timestamp - key.timestamp;
-                let timedelta: f32 = next.timestamp - time;
-                let delta_factor: f32 = latency / timedelta;
-                let value_delta: f32 = (next.value - key.value) * delta_factor;
-                return key.value.lerp(&next.value, &delta_factor);
-                // return key.value + value_delta;
-            } else {
-                // No next frame has been placed yet.
-                return key.value;
-            }
-        } else {
-            // There is not yet enough data to interpolate
-            return 0.0;
-        }
-    }
-
-    pub fn push(&mut self, value_option: Option<&f32>, timestamp: f32) {
-        if let Some(value) = value_option {
-            self.next = self.key;
-            self.key = Some(TimeKey {
-                timestamp: timestamp,
-                value: *value,
-            });
-        };
-    }
-}
 
 #[derive(Resource, Default, Debug)]
 pub struct AircraftState {
     pub time: f32,
-    pub pitch: TimeFrame,
-    pub roll: TimeFrame,
-    pub magnetic_heading: TimeFrame,
-    pub true_heading: TimeFrame,
+    pub pitch: f32,
+    pub roll: f32,
+    pub magnetic_heading: f32,
+    pub true_heading: f32,
 }
 
 impl AircraftState {
     pub fn push(&mut self, mut payload: Payload) {
         if let Some(timestamp) = payload.loc(1, 0) {
             self.time = *timestamp;
-            self.pitch.push(payload.loc(17, 0), self.time);
-            self.roll.push(payload.loc(17, 1), self.time);
-            self.magnetic_heading.push(payload.loc(17, 2), self.time);
-            self.true_heading.push(payload.loc(17, 3), self.time);
+            if let Some(value) = payload.loc(17, 0) {
+                self.pitch = *value;
+            }
+            if let Some(value) = payload.loc(17, 1) {
+                self.roll = *value;
+            }
+            if let Some(value) = payload.loc(17, 2) {
+                self.magnetic_heading = *value;
+            }
+            if let Some(value) = payload.loc(17, 3) {
+                self.true_heading = *value;
+            }
         };
     }
 }

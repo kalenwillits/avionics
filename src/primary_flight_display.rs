@@ -1,6 +1,7 @@
 use crate::utils::degrees_to_radians;
 use crate::xplane_listener::AircraftState;
 use bevy::prelude::*;
+use interpolation::Lerp;
 
 pub struct PrimaryFlightDisplay;
 
@@ -155,5 +156,13 @@ fn consume_aircraft_state_system(
 ) {
     let mut transform = artifical_horizon_queryset.single_mut();
     // let new_rotation = aircraft_state.roll.interpolate(aircraft_state.time);
-    transform.rotation.z = degrees_to_radians(aircraft_state.roll.interpolate(aircraft_state.time)) * -0.5;
+    // transform.rotation.z = degrees_to_radians(aircraft_state.roll.interpolate(aircraft_state.time)) * -0.5;
+    if transform.rotation.z > 0.0 {
+        let target = degrees_to_radians(aircraft_state.roll) * -0.5 ;
+        let rate = (transform.rotation.z).abs() / (transform.rotation.z.abs());
+        transform.rotation.z = transform.rotation.z.lerp(&target, &rate);
+    } else {
+        let target = degrees_to_radians(aircraft_state.roll) * -0.5 ;
+        transform.rotation.z = transform.rotation.z.lerp(&target, &1f32);
+    }
 }
