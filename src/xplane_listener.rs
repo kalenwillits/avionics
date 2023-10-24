@@ -73,6 +73,10 @@ pub struct AircraftState {
     pub roll: f32,
     pub magnetic_heading: f32,
     pub true_heading: f32,
+    pub indicated_airspeed: f32,
+    pub equivalent_airspeed: f32,
+    pub true_airspeed: f32,
+    pub true_groundspeed: f32,
 }
 
 impl AircraftState {
@@ -90,6 +94,19 @@ impl AircraftState {
             }
             if let Some(value) = payload.loc(17, 3) {
                 self.true_heading = *value;
+            }
+
+            if let Some(value) = payload.loc(3, 0) {
+                self.indicated_airspeed = *value;
+            }
+            if let Some(value) = payload.loc(3, 1) {
+                self.equivalent_airspeed = *value;
+            }
+            if let Some(value) = payload.loc(3, 2) {
+                self.true_airspeed = *value;
+            }
+            if let Some(value) = payload.loc(3, 3) {
+                self.true_groundspeed = *value;
             }
         };
     }
