@@ -20,7 +20,7 @@ fn main() {
                 }),
                 ..default()
             }),
-            // WorldInspectorPlugin::default(),
+            WorldInspectorPlugin::default(),
             device::Device,
             xplane_listener::XPlaneListener,
             primary_flight_display::PrimaryFlightDisplay,

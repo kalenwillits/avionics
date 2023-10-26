@@ -265,17 +265,11 @@ fn spawn_airspeed_indicator(mut commands: Commands, asset_server: Res<AssetServe
                             Name::new("DigitalDisplay"),
                             NodeBundle {
                                 style: Style {
-                                    margin: UiRect {
-                                        left: Val::Percent(6.0),
-                                        right: Val::Percent(0.0),
-                                        top: Val::Percent(0.0),
-                                        bottom: Val::Percent(0.0),
-                                    },
-                                    width: Val::Percent(12.0),
-                                    height: Val::Percent(5.0),
+                                    width: Val::Px(66.0),
+                                    height: Val::Px(36.0),
                                     border: UiRect::all(Val::Px(1.0)),
-                                    flex_direction: FlexDirection::Column,
-                                    justify_content: JustifyContent::Center,
+                                    // flex_direction: FlexDirection::Column,
+                                    justify_content: JustifyContent::End,
                                     ..default()
                                 },
 
@@ -287,7 +281,7 @@ fn spawn_airspeed_indicator(mut commands: Commands, asset_server: Res<AssetServe
                             parent.spawn((
                                 AirspeedIndicator {},
                                 TextBundle::from_section(
-                                    "---",
+                                    "----",
                                     TextStyle {
                                         font: asset_server
                                             .load("fonts/ubuntu_mono/UbuntuMono-Bold.ttf"),
@@ -297,11 +291,10 @@ fn spawn_airspeed_indicator(mut commands: Commands, asset_server: Res<AssetServe
                                     },
                                 )
                                 .with_style(Style {
-                                    align_items: AlignItems::End,
-                                    width: Val::Percent(100.0),
-                                    height: Val::Percent(100.0),
+                                    flex_grow: -1.0,
                                     ..default()
-                                }),
+                                })
+                                .with_text_alignment(TextAlignment::Right),
                             ));
                         });
                 });
@@ -354,5 +347,10 @@ fn update_airspeed_indicator(
     mut airspeed_indicator_queryset: Query<&mut Text, With<AirspeedIndicator>>,
 ) {
     let mut airspeed_indicator_text = airspeed_indicator_queryset.single_mut();
-    airspeed_indicator_text.sections[0].value = format!("{}", aircraft_state.indicated_airspeed);
+    let value: f32 = aircraft_state.indicated_airspeed.round();
+    if value == 0.0 {
+        airspeed_indicator_text.sections[0].value = format!("----");
+    } else {
+        airspeed_indicator_text.sections[0].value = format!("{}", value);
+    }
 }
