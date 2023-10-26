@@ -2,6 +2,7 @@ mod device;
 mod primary_flight_display;
 mod utils;
 mod xplane_listener;
+mod airspeed_indicator;
 
 use bevy::prelude::*;
 use bevy_inspector_egui::quick::WorldInspectorPlugin;
