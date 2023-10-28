@@ -4,7 +4,6 @@ mod airspeed_indicator;
 mod artificial_horizon;
 
 use bevy::prelude::*;
-use bevy_inspector_egui::quick::WorldInspectorPlugin;
 
 const STEAM_DECK_RESOLUTION: (f32, f32) = (1280f32, 800f32);
 
@@ -20,7 +19,6 @@ fn main() {
                 }),
                 ..default()
             }),
-            WorldInspectorPlugin::default(),
             xplane_listener::XPlaneListener,
             artificial_horizon::ArtificialHorizonPlugin,
             airspeed_indicator::AirSpeedIndicatorPlugin,
