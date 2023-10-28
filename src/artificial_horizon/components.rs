@@ -5,4 +5,3 @@ pub struct ArtificialHorizon;
 
 #[derive(Component)]
 pub struct PitchLines;
-

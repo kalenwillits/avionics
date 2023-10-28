@@ -1,11 +1,9 @@
-use bevy::prelude::*;
-use crate::xplane_listener::AircraftState;
 use super::components::{ArtificialHorizon, PitchLines};
 use crate::utils::degrees_to_radians;
-
+use crate::xplane_listener::AircraftState;
+use bevy::prelude::*;
 
 const NUM_PITCH_LINES: usize = 16;
-
 
 pub fn spawn_artificial_horizon(mut commands: Commands) {
     commands
@@ -64,7 +62,6 @@ pub fn spawn_artificial_horizon(mut commands: Commands) {
             ));
         });
 }
-
 
 pub fn spawn_pitch_lines(mut commands: Commands) {
     commands
@@ -189,7 +186,6 @@ pub fn spawn_crosshairs(mut commands: Commands) {
                 });
         });
 }
-
 
 pub fn update_artificial_horizon(
     aircraft_state: Res<AircraftState>,

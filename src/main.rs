@@ -1,7 +1,7 @@
-mod utils;
-mod xplane_listener;
 mod airspeed_indicator;
 mod artificial_horizon;
+mod utils;
+mod xplane_listener;
 
 use bevy::prelude::*;
 

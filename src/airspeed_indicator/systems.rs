@@ -1,7 +1,6 @@
-use bevy::prelude::*;
-use crate::xplane_listener::AircraftState;
 use super::components::AirSpeedIndicator;
-
+use crate::xplane_listener::AircraftState;
+use bevy::prelude::*;
 
 pub fn spawn_airspeed_indicator(mut commands: Commands, asset_server: Res<AssetServer>) {
     commands
@@ -106,7 +105,6 @@ pub fn spawn_airspeed_indicator(mut commands: Commands, asset_server: Res<AssetS
             });
         });
 }
-
 
 pub fn update_airspeed_indicator(
     aircraft_state: Res<AircraftState>,
