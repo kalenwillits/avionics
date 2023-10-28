@@ -1,5 +1,3 @@
-mod device;
-// mod primary_flight_display;
 mod utils;
 mod xplane_listener;
 mod airspeed_indicator;
@@ -23,11 +21,9 @@ fn main() {
                 ..default()
             }),
             WorldInspectorPlugin::default(),
-            device::Device,
             xplane_listener::XPlaneListener,
             artificial_horizon::ArtificialHorizonPlugin,
             airspeed_indicator::AirSpeedIndicatorPlugin,
-            // primary_flight_display::PrimaryFlightDisplay,
         ))
         .run();
 }
