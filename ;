@@ -1,42 +1,13 @@
-use crate::utils::degrees_to_radians;
-use crate::xplane_listener::AircraftState;
 use bevy::prelude::*;
+use crate::xplane_listener::AircraftState;
+use super::components::{ArtificialHorizon, PitchLines};
+use crate::utils::degrees_to_radians;
 
-use crate::airspeed_indicator;
 
 const NUM_PITCH_LINES: usize = 16;
 
-pub struct PrimaryFlightDisplay;
 
-impl Plugin for PrimaryFlightDisplay {
-    fn build(&self, app: &mut App) {
-        app.add_plugins(airspeed_indicator::AirSpeedIndicatorPlugin)
-            .add_systems(
-            Startup,
-            (
-                spawn_crosshairs,
-                spawn_artifical_horizon,
-                spawn_pitch_lines,
-            ),
-        )
-        .add_systems(
-            Update,
-            (
-                update_artifical_horizon_system,
-                update_pitch_lines_system,
-            ),
-        );
-    }
-}
-
-#[derive(Component)]
-struct ArtificalHorizon;
-
-#[derive(Component)]
-struct PitchLines;
-
-
-fn spawn_artifical_horizon(mut commands: Commands) {
+pub fn spawn_artificial_horizon(mut commands: Commands) {
     commands
         .spawn((
             NodeBundle {
@@ -55,7 +26,7 @@ fn spawn_artifical_horizon(mut commands: Commands) {
                 ..default()
             },
             Name::new("ArtificialHorizon"),
-            ArtificalHorizon {},
+            ArtificialHorizon {},
         ))
         .with_children(|parent| {
             parent.spawn((
@@ -94,7 +65,8 @@ fn spawn_artifical_horizon(mut commands: Commands) {
         });
 }
 
-fn spawn_pitch_lines(mut commands: Commands) {
+
+pub fn spawn_pitch_lines(mut commands: Commands) {
     commands
         .spawn((
             Name::new("PitchLines"),
@@ -145,7 +117,7 @@ fn spawn_pitch_lines(mut commands: Commands) {
         });
 }
 
-fn spawn_crosshairs(mut commands: Commands) {
+pub fn spawn_crosshairs(mut commands: Commands) {
     commands
         .spawn((
             NodeBundle {
@@ -218,17 +190,18 @@ fn spawn_crosshairs(mut commands: Commands) {
         });
 }
 
-fn update_artifical_horizon_system(
+
+pub fn update_artificial_horizon(
     aircraft_state: Res<AircraftState>,
-    mut artifical_horizon_queryset: Query<(&mut Transform, &mut Style), With<ArtificalHorizon>>,
+    mut artificial_horizon_queryset: Query<(&mut Transform, &mut Style), With<ArtificialHorizon>>,
 ) {
-    let (mut artifical_horizon_transform, mut artifical_horizon_style) =
-        artifical_horizon_queryset.single_mut();
-    artifical_horizon_transform.rotation.z = degrees_to_radians(aircraft_state.roll) * -0.5;
-    artifical_horizon_style.top = Val::Percent(aircraft_state.pitch);
+    let (mut artificial_horizon_transform, mut artificial_horizon_style) =
+        artificial_horizon_queryset.single_mut();
+    artificial_horizon_transform.rotation.z = degrees_to_radians(aircraft_state.roll) * -0.5;
+    artificial_horizon_style.top = Val::Percent(aircraft_state.pitch);
 }
 
-fn update_pitch_lines_system(
+pub fn update_pitch_lines(
     aircraft_state: Res<AircraftState>,
     mut pitch_lines_queryset: Query<(&mut Transform, &mut Style), With<PitchLines>>,
 ) {

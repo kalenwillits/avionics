@@ -1,8 +1,9 @@
 mod device;
-mod primary_flight_display;
+// mod primary_flight_display;
 mod utils;
 mod xplane_listener;
 mod airspeed_indicator;
+mod artificial_horizon;
 
 use bevy::prelude::*;
 use bevy_inspector_egui::quick::WorldInspectorPlugin;
@@ -24,7 +25,9 @@ fn main() {
             WorldInspectorPlugin::default(),
             device::Device,
             xplane_listener::XPlaneListener,
-            primary_flight_display::PrimaryFlightDisplay,
+            artificial_horizon::ArtificialHorizonPlugin,
+            airspeed_indicator::AirSpeedIndicatorPlugin,
+            // primary_flight_display::PrimaryFlightDisplay,
         ))
         .run();
 }
