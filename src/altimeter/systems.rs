@@ -1,8 +1,12 @@
-use super::components::AirSpeedIndicator;
+use super::components::Altimeter;
 use crate::xplane_listener::AircraftState;
 use bevy::prelude::*;
 
-pub fn spawn_airspeed_indicator(mut commands: Commands, asset_server: Res<AssetServer>) {
+
+pub fn spawn_altimeter(
+        mut commands: Commands,
+        asset_server: Res<AssetServer>
+    ) {
     commands
         .spawn((
             NodeBundle {
@@ -41,7 +45,18 @@ pub fn spawn_airspeed_indicator(mut commands: Commands, asset_server: Res<AssetS
                         ..default()
                     },
                     ..default()
-                })
+                });
+
+            parent.spawn(NodeBundle {
+                style: Style {
+                    width: Val::Percent(33.3333),
+                    height: Val::Percent(100.0),
+                    align_items: AlignItems::End,
+                    border: UiRect::all(Val::Px(1.0)),
+                    ..default()
+                },
+                ..default()
+            })
                 .with_children(|parent| {
                     parent
                         .spawn((
@@ -62,7 +77,7 @@ pub fn spawn_airspeed_indicator(mut commands: Commands, asset_server: Res<AssetS
                         ))
                         .with_children(|parent| {
                             parent.spawn((
-                                AirSpeedIndicator {},
+                                Altimeter {},
                                 TextBundle::from_section(
                                     "----",
                                     TextStyle {
@@ -82,16 +97,6 @@ pub fn spawn_airspeed_indicator(mut commands: Commands, asset_server: Res<AssetS
                         });
                 });
 
-            parent.spawn(NodeBundle {
-                style: Style {
-                    width: Val::Percent(33.3333),
-                    height: Val::Percent(100.0),
-                    align_items: AlignItems::End,
-                    border: UiRect::all(Val::Px(1.0)),
-                    ..default()
-                },
-                ..default()
-            });
 
             parent.spawn(NodeBundle {
                 style: Style {
@@ -104,13 +109,15 @@ pub fn spawn_airspeed_indicator(mut commands: Commands, asset_server: Res<AssetS
                 ..default()
             });
         });
+
+
 }
 
-pub fn update_airspeed_indicator(
+pub fn update_altimeter(
     aircraft_state: Res<AircraftState>,
-    mut airspeed_indicator_queryset: Query<&mut Text, With<AirSpeedIndicator>>,
+    mut altimeter_queryset: Query<&mut Text, With<Altimeter>>,
 ) {
-    let mut airspeed_indicator_text = airspeed_indicator_queryset.single_mut();
-    let value: f32 = aircraft_state.indicated_airspeed.round();
-    airspeed_indicator_text.sections[0].value = format!("{}", value);
+    let mut altimeter_text = altimeter_queryset.single_mut();
+    let value: f32 = aircraft_state.indicated_altitude.round();
+    altimeter_text.sections[0].value = format!("{}", value);
 }

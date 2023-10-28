@@ -77,6 +77,14 @@ pub struct AircraftState {
     pub equivalent_airspeed: f32,
     pub true_airspeed: f32,
     pub true_groundspeed: f32,
+    pub latitude: f32,
+    pub longitude: f32,
+    pub mean_sea_level_altitude: f32,
+    pub above_ground_level_altitude: f32,
+    pub on_runway: f32,
+    pub indicated_altitude: f32,
+    pub origin_latitude: f32,
+    pub origin_longitude: f32,
 }
 
 impl AircraftState {
@@ -107,6 +115,31 @@ impl AircraftState {
             }
             if let Some(value) = payload.loc(3, 3) {
                 self.true_groundspeed = *value;
+            }
+
+            if let Some(value) = payload.loc(20, 0) {
+                self.latitude = *value;
+            }
+            if let Some(value) = payload.loc(20, 1) {
+                self.longitude = *value;
+            }
+            if let Some(value) = payload.loc(20, 2) {
+                self.mean_sea_level_altitude = *value;
+            }
+            if let Some(value) = payload.loc(20, 3) {
+                self.above_ground_level_altitude = *value;
+            }
+            if let Some(value) = payload.loc(20, 4) {
+                self.on_runway = *value;
+            }
+            if let Some(value) = payload.loc(20, 5) {
+                self.indicated_altitude = *value;
+            }
+            if let Some(value) = payload.loc(20, 6) {
+                self.origin_latitude = *value;
+            }
+            if let Some(value) = payload.loc(20, 7) {
+                self.origin_longitude = *value;
             }
         };
     }
