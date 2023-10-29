@@ -120,6 +120,6 @@ pub fn update_altimeter(
     mut altimeter_queryset: Query<&mut Text, With<Altimeter>>,
 ) {
     let mut altimeter_text = altimeter_queryset.single_mut();
-    let value: f32 = (aircraft_state.indicated_altitude * 10.0).round() / 10.0;
+    let value: i32 = ((aircraft_state.indicated_altitude / 10.0).round() * 10.0) as i32;
     altimeter_text.sections[0].value = format!("{}", value);
 }
