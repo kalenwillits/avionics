@@ -41,17 +41,30 @@ pub fn spawn_airspeed_indicator(mut commands: Commands, asset_server: Res<AssetS
                     ..default()
                 })
                 .with_children(|parent| {
+                    parent.spawn(NodeBundle {
+                        style: Style {
+                            width: Val::Percent(100.0),
+                            flex_direction: FlexDirection::Row,
+                            justify_content: JustifyContent::Start,
+
+                            ..default()
+                        },
+                        ..default()
+                    })
+
+                .with_children(|parent| {
                     parent
                         .spawn((
                             Name::new("DigitalDisplay"),
                             NodeBundle {
                                 style: Style {
                                     width: Val::Px(66.0),
-                                    height: Val::Px(36.0),
-                                    justify_content: JustifyContent::End,
+                                    height: Val::Px(33.0),
+                                    justify_content: JustifyContent::Center,
+                                    align_items: AlignItems::Center,
+                                    flex_direction: FlexDirection::Row,
                                     ..default()
                                 },
-
                                 background_color: Color::rgb(0.0, 0.0, 0.0).into(),
                                 ..default()
                             },
@@ -76,7 +89,7 @@ pub fn spawn_airspeed_indicator(mut commands: Commands, asset_server: Res<AssetS
                                 .with_text_alignment(TextAlignment::Right),
                             ));
                         });
-                });
+                });});
 
             parent.spawn(NodeBundle {
                 style: Style {

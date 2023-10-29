@@ -97,7 +97,6 @@ pub fn spawn_altimeter(
                                     },
                                 )
                                 .with_style(Style {
-                                    // justify_self: JustifySelf::End,
                                     flex_grow: -1.0,
                                     ..default()
                                 })
