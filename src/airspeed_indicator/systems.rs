@@ -24,7 +24,6 @@ pub fn spawn_airspeed_indicator(mut commands: Commands, asset_server: Res<AssetS
                     width: Val::Percent(16.666),
                     height: Val::Percent(100.0),
                     align_items: AlignItems::Start,
-                    border: UiRect::all(Val::Px(1.0)),
                     ..default()
                 },
                 ..default()
@@ -35,7 +34,6 @@ pub fn spawn_airspeed_indicator(mut commands: Commands, asset_server: Res<AssetS
                     style: Style {
                         width: Val::Percent(33.3333),
                         height: Val::Percent(100.0),
-                        border: UiRect::all(Val::Px(1.0)),
                         flex_direction: FlexDirection::Column,
                         justify_content: JustifyContent::Center,
                         ..default()
@@ -50,8 +48,6 @@ pub fn spawn_airspeed_indicator(mut commands: Commands, asset_server: Res<AssetS
                                 style: Style {
                                     width: Val::Px(66.0),
                                     height: Val::Px(36.0),
-                                    border: UiRect::all(Val::Px(1.0)),
-                                    // flex_direction: FlexDirection::Column,
                                     justify_content: JustifyContent::End,
                                     ..default()
                                 },
@@ -87,7 +83,6 @@ pub fn spawn_airspeed_indicator(mut commands: Commands, asset_server: Res<AssetS
                     width: Val::Percent(33.3333),
                     height: Val::Percent(100.0),
                     align_items: AlignItems::End,
-                    border: UiRect::all(Val::Px(1.0)),
                     ..default()
                 },
                 ..default()
@@ -98,7 +93,6 @@ pub fn spawn_airspeed_indicator(mut commands: Commands, asset_server: Res<AssetS
                     width: Val::Percent(16.6666),
                     height: Val::Percent(100.0),
                     align_items: AlignItems::End,
-                    border: UiRect::all(Val::Px(1.0)),
                     ..default()
                 },
                 ..default()

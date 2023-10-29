@@ -28,7 +28,6 @@ pub fn spawn_altimeter(
                     width: Val::Percent(16.666),
                     height: Val::Percent(100.0),
                     align_items: AlignItems::Start,
-                    border: UiRect::all(Val::Px(1.0)),
                     ..default()
                 },
                 ..default()
@@ -39,7 +38,6 @@ pub fn spawn_altimeter(
                     style: Style {
                         width: Val::Percent(33.3333),
                         height: Val::Percent(100.0),
-                        border: UiRect::all(Val::Px(1.0)),
                         flex_direction: FlexDirection::Column,
                         justify_content: JustifyContent::Center,
                         ..default()
@@ -51,12 +49,23 @@ pub fn spawn_altimeter(
                 style: Style {
                     width: Val::Percent(33.3333),
                     height: Val::Percent(100.0),
-                    align_items: AlignItems::End,
-                    border: UiRect::all(Val::Px(1.0)),
+                    flex_direction: FlexDirection::Column,
+                    justify_content: JustifyContent::Center,
                     ..default()
                 },
                 ..default()
             })
+                .with_children(|parent| {
+                    parent.spawn(NodeBundle {
+                        style: Style {
+                            width: Val::Percent(100.0),
+                            flex_direction: FlexDirection::Row,
+                            justify_content: JustifyContent::End,
+
+                            ..default()
+                        },
+                        ..default()
+                    })
                 .with_children(|parent| {
                     parent
                         .spawn((
@@ -64,13 +73,12 @@ pub fn spawn_altimeter(
                             NodeBundle {
                                 style: Style {
                                     width: Val::Px(66.0),
-                                    height: Val::Px(36.0),
-                                    border: UiRect::all(Val::Px(1.0)),
-                                    // flex_direction: FlexDirection::Column,
-                                    justify_content: JustifyContent::End,
+                                    height: Val::Px(30.0),
+                                    justify_content: JustifyContent::Center,
+                                    align_items: AlignItems::Center,
+                                    flex_direction: FlexDirection::Row,
                                     ..default()
                                 },
-
                                 background_color: Color::rgb(0.0, 0.0, 0.0).into(),
                                 ..default()
                             },
@@ -89,6 +97,7 @@ pub fn spawn_altimeter(
                                     },
                                 )
                                 .with_style(Style {
+                                    // justify_self: JustifySelf::End,
                                     flex_grow: -1.0,
                                     ..default()
                                 })
@@ -97,13 +106,14 @@ pub fn spawn_altimeter(
                         });
                 });
 
+                });
+
 
             parent.spawn(NodeBundle {
                 style: Style {
                     width: Val::Percent(16.6666),
                     height: Val::Percent(100.0),
                     align_items: AlignItems::End,
-                    border: UiRect::all(Val::Px(1.0)),
                     ..default()
                 },
                 ..default()
