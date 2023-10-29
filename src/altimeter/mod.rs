@@ -11,4 +11,3 @@ impl Plugin for AltimeterPlugin {
             .add_systems(Update, systems::update_altimeter);
     }
 }
-

@@ -41,55 +41,56 @@ pub fn spawn_airspeed_indicator(mut commands: Commands, asset_server: Res<AssetS
                     ..default()
                 })
                 .with_children(|parent| {
-                    parent.spawn(NodeBundle {
-                        style: Style {
-                            width: Val::Percent(100.0),
-                            flex_direction: FlexDirection::Row,
-                            justify_content: JustifyContent::Start,
-
-                            ..default()
-                        },
-                        ..default()
-                    })
-
-                .with_children(|parent| {
                     parent
-                        .spawn((
-                            Name::new("DigitalDisplay"),
-                            NodeBundle {
-                                style: Style {
-                                    width: Val::Px(66.0),
-                                    height: Val::Px(33.0),
-                                    justify_content: JustifyContent::Center,
-                                    align_items: AlignItems::Center,
-                                    flex_direction: FlexDirection::Row,
-                                    ..default()
-                                },
-                                background_color: Color::rgb(0.0, 0.0, 0.0).into(),
+                        .spawn(NodeBundle {
+                            style: Style {
+                                width: Val::Percent(100.0),
+                                flex_direction: FlexDirection::Row,
+                                justify_content: JustifyContent::Start,
+
                                 ..default()
                             },
-                        ))
+                            ..default()
+                        })
                         .with_children(|parent| {
-                            parent.spawn((
-                                AirSpeedIndicator {},
-                                TextBundle::from_section(
-                                    "----",
-                                    TextStyle {
-                                        font: asset_server
-                                            .load("fonts/ubuntu_mono/UbuntuMono-Bold.ttf"),
-                                        font_size: 32.0,
-                                        color: Color::WHITE,
+                            parent
+                                .spawn((
+                                    Name::new("DigitalDisplay"),
+                                    NodeBundle {
+                                        style: Style {
+                                            width: Val::Px(66.0),
+                                            height: Val::Px(33.0),
+                                            justify_content: JustifyContent::Center,
+                                            align_items: AlignItems::Center,
+                                            flex_direction: FlexDirection::Row,
+                                            ..default()
+                                        },
+                                        background_color: Color::rgb(0.0, 0.0, 0.0).into(),
                                         ..default()
                                     },
-                                )
-                                .with_style(Style {
-                                    flex_grow: -1.0,
-                                    ..default()
-                                })
-                                .with_text_alignment(TextAlignment::Right),
-                            ));
+                                ))
+                                .with_children(|parent| {
+                                    parent.spawn((
+                                        AirSpeedIndicator {},
+                                        TextBundle::from_section(
+                                            "----",
+                                            TextStyle {
+                                                font: asset_server
+                                                    .load("fonts/ubuntu_mono/UbuntuMono-Bold.ttf"),
+                                                font_size: 32.0,
+                                                color: Color::WHITE,
+                                                ..default()
+                                            },
+                                        )
+                                        .with_style(Style {
+                                            flex_grow: -1.0,
+                                            ..default()
+                                        })
+                                        .with_text_alignment(TextAlignment::Right),
+                                    ));
+                                });
                         });
-                });});
+                });
 
             parent.spawn(NodeBundle {
                 style: Style {

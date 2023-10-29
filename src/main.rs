@@ -1,6 +1,7 @@
-mod artificial_horizon;
 mod airspeed_indicator;
 mod altimeter;
+mod artificial_horizon;
+mod heading_indicator;
 mod utils;
 mod xplane_listener;
 
@@ -25,12 +26,11 @@ fn main() {
             artificial_horizon::ArtificialHorizonPlugin,
             airspeed_indicator::AirSpeedIndicatorPlugin,
             altimeter::AltimeterPlugin,
+            heading_indicator::HeadingIndicatorPlugin,
         ))
         .run();
 }
 
-fn setup(
-    mut commands: Commands
-    ) {
+fn setup(mut commands: Commands) {
     commands.spawn(Camera2dBundle::default());
 }
