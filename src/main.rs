@@ -9,6 +9,7 @@ const STEAM_DECK_RESOLUTION: (f32, f32) = (1280f32, 800f32);
 
 fn main() {
     App::new()
+        .add_systems(Startup, setup)
         .add_plugins((
             DefaultPlugins.set(WindowPlugin {
                 primary_window: Some(Window {
@@ -24,4 +25,10 @@ fn main() {
             airspeed_indicator::AirSpeedIndicatorPlugin,
         ))
         .run();
+}
+
+fn setup(
+    mut commands: Commands
+    ) {
+    commands.spawn(Camera2dBundle::default());
 }
