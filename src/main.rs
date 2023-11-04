@@ -2,8 +2,8 @@ mod airspeed_indicator;
 mod altimeter;
 mod artificial_horizon;
 mod heading_indicator;
-mod vertical_speed_indicator;
 mod utils;
+mod vertical_speed_indicator;
 mod xplane_listener;
 
 use bevy::prelude::*;
