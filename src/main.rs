@@ -2,6 +2,7 @@ mod airspeed_indicator;
 mod altimeter;
 mod artificial_horizon;
 mod heading_indicator;
+mod vertical_speed_indicator;
 mod utils;
 mod xplane_listener;
 
@@ -25,6 +26,7 @@ fn main() {
             xplane_listener::XPlaneListener,
             artificial_horizon::ArtificialHorizonPlugin,
             airspeed_indicator::AirSpeedIndicatorPlugin,
+            vertical_speed_indicator::VerticalSpeedIndicatorPlugin,
             altimeter::AltimeterPlugin,
             heading_indicator::HeadingIndicatorPlugin,
         ))

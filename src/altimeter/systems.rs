@@ -11,6 +11,7 @@ pub fn spawn_altimeter(mut commands: Commands, asset_server: Res<AssetServer>) {
                     height: Val::Percent(100.0),
                     flex_direction: FlexDirection::Row,
                     position_type: PositionType::Absolute,
+                    justify_content: JustifyContent::End,
                     ..default()
                 },
                 z_index: ZIndex::Local(2),
@@ -19,50 +20,29 @@ pub fn spawn_altimeter(mut commands: Commands, asset_server: Res<AssetServer>) {
             Name::new("IndicatorLayers"),
         ))
         .with_children(|parent| {
-            parent.spawn(NodeBundle {
-                style: Style {
-                    width: Val::Percent(16.666),
-                    height: Val::Percent(100.0),
-                    align_items: AlignItems::Start,
-                    ..default()
-                },
-                ..default()
-            });
-
-            parent.spawn(NodeBundle {
-                style: Style {
-                    width: Val::Percent(33.3333),
-                    height: Val::Percent(100.0),
-                    flex_direction: FlexDirection::Column,
-                    justify_content: JustifyContent::Center,
-                    ..default()
-                },
-                ..default()
-            });
-
             parent
                 .spawn(NodeBundle {
                     style: Style {
                         width: Val::Percent(33.3333),
                         height: Val::Percent(100.0),
-                        flex_direction: FlexDirection::Column,
-                        justify_content: JustifyContent::Center,
+                        flex_direction: FlexDirection::Row,
+                        justify_content: JustifyContent::Start,
+                        align_items: AlignItems::Center,
                         ..default()
                     },
                     ..default()
                 })
-                .with_children(|parent| {
-                    parent
-                        .spawn(NodeBundle {
-                            style: Style {
-                                width: Val::Percent(100.0),
-                                flex_direction: FlexDirection::Row,
-                                justify_content: JustifyContent::End,
-
-                                ..default()
-                            },
-                            ..default()
-                        })
+                // .with_children(|parent| {
+                //     parent
+                //         .spawn(NodeBundle {
+                //             style: Style {
+                //                 width: Val::Percent(100.0),
+                //                 flex_direction: FlexDirection::Row,
+                //                 justify_content: JustifyContent::End,
+                //                 ..default()
+                //             },
+                //             ..default()
+                //         })
                         .with_children(|parent| {
                             parent
                                 .spawn((
@@ -103,16 +83,7 @@ pub fn spawn_altimeter(mut commands: Commands, asset_server: Res<AssetServer>) {
                         });
                 });
 
-            parent.spawn(NodeBundle {
-                style: Style {
-                    width: Val::Percent(16.6666),
-                    height: Val::Percent(100.0),
-                    align_items: AlignItems::End,
-                    ..default()
-                },
-                ..default()
-            });
-        });
+            // });
 }
 
 pub fn update_altimeter(
