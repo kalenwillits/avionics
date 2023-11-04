@@ -4,6 +4,7 @@ mod artificial_horizon;
 mod heading_indicator;
 mod utils;
 mod vertical_speed_indicator;
+mod turn_coordinator;
 mod xplane_listener;
 
 use bevy::prelude::*;
@@ -27,6 +28,7 @@ fn main() {
             artificial_horizon::ArtificialHorizonPlugin,
             airspeed_indicator::AirSpeedIndicatorPlugin,
             vertical_speed_indicator::VerticalSpeedIndicatorPlugin,
+            turn_coordinator::TurnCoordinatorPlugin,
             altimeter::AltimeterPlugin,
             heading_indicator::HeadingIndicatorPlugin,
         ))

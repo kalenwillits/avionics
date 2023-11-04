@@ -8,7 +8,7 @@ const LINE_DISTANCE: f32  = 25.0;
 const MAX_VERTICAL_SPEED: f32 = 2000.0;
 const RANGE_FACTOR: f32 = 50.0;
 
-pub fn spawn_vertical_speed_indicator(mut commands: Commands, asset_server: Res<AssetServer>) {
+pub fn spawn_vertical_speed_indicator(mut commands: Commands, _asset_server: Res<AssetServer>) {
     commands
         .spawn((
             NodeBundle {
@@ -92,7 +92,6 @@ pub fn spawn_vertical_speed_indicator(mut commands: Commands, asset_server: Res<
                             }
                         });
 
-                        // });
                 });
         });
 }
@@ -100,16 +99,10 @@ pub fn spawn_vertical_speed_indicator(mut commands: Commands, asset_server: Res<
 pub fn update_vertical_speed_indicator(
     aircraft_state: Res<AircraftState>,
     mut vertical_speed_indicator_queryset: Query<
-        (&mut Transform, &mut Style),
+        &mut Style,
         With<VerticalSpeedIndicatorNeedle>,
     >,
 ) {
-    let (mut transform, mut style) = vertical_speed_indicator_queryset.single_mut();
+    let mut style = vertical_speed_indicator_queryset.single_mut();
     style.top = Val::Percent((-(aircraft_state.vertical_speed / (MAX_VERTICAL_SPEED / RANGE_FACTOR))).clamp(-49.0, 49.0));
-    // if vertical_speed_indicator_needle_transform.rotation.z > degrees_to_radians(25.0) {
-    //     vertical_speed_indicator_needle_transform.rotation.z = 0.0;
-    // };
-    // vertical_speed_indicator_needle_transform.rotation.z = (vertical_speed_indicator_needle_transform.rotation.z + degrees_to_radians(0.1)).clamp(degrees_to_radians(0.0), degrees_to_radians(30.0));
-    // let value: f32 = aircraft_state.magnetic_heading.round();
-    // vertical_speed_indicator_text.sections[0].value = format!("{}", value);
 }
