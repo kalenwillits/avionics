@@ -18,7 +18,8 @@ pub fn spawn_airspeed_indicator(mut commands: Commands, asset_server: Res<AssetS
                 ..default()
             },
             Name::new("IndicatorLayers"),
-        )).with_children(|parent| {
+        ))
+        .with_children(|parent| {
             parent
                 .spawn(NodeBundle {
                     style: Style {

@@ -2,7 +2,6 @@ use super::components::{TurnCoordinator, TurnCoordinatorBall};
 use crate::xplane_listener::AircraftState;
 use bevy::prelude::*;
 
-
 const MAX_RANGE: f32 = 0.01;
 const INSTRUMENT_SIZE: f32 = 96.0;
 const BALL_SIZE: f32 = 18.0;
@@ -92,7 +91,6 @@ pub fn spawn_turn_coordinator(mut commands: Commands, _asset_server: Res<AssetSe
                                 background_color: Color::WHITE.into(),
                                 ..default()
                             });
-
                         });
                 });
         });
@@ -100,11 +98,9 @@ pub fn spawn_turn_coordinator(mut commands: Commands, _asset_server: Res<AssetSe
 
 pub fn update_turn_coordinator(
     aircraft_state: Res<AircraftState>,
-    mut turn_coordinator_queryset: Query<
-        &mut Style,
-        With<TurnCoordinatorBall>,
-    >,
+    mut turn_coordinator_queryset: Query<&mut Style, With<TurnCoordinatorBall>>,
 ) {
     let mut style = turn_coordinator_queryset.single_mut();
-    style.left = Val::Percent((50.0 - (BALL_SIZE / 2.0) + 2.0) - (aircraft_state.gload_side / MAX_RANGE));
+    style.left =
+        Val::Percent((50.0 - (BALL_SIZE / 2.0) + 2.0) - (aircraft_state.gload_side / MAX_RANGE));
 }

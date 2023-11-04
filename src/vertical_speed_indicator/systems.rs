@@ -2,9 +2,8 @@ use super::components::{VerticalSpeedIndicator, VerticalSpeedIndicatorNeedle};
 use crate::xplane_listener::AircraftState;
 use bevy::prelude::*;
 
-
 const NUM_LINES: i32 = 5;
-const LINE_DISTANCE: f32  = 25.0;
+const LINE_DISTANCE: f32 = 25.0;
 const MAX_VERTICAL_SPEED: f32 = 2000.0;
 const RANGE_FACTOR: f32 = 50.0;
 
@@ -91,18 +90,16 @@ pub fn spawn_vertical_speed_indicator(mut commands: Commands, _asset_server: Res
                                 });
                             }
                         });
-
                 });
         });
 }
 
 pub fn update_vertical_speed_indicator(
     aircraft_state: Res<AircraftState>,
-    mut vertical_speed_indicator_queryset: Query<
-        &mut Style,
-        With<VerticalSpeedIndicatorNeedle>,
-    >,
+    mut vertical_speed_indicator_queryset: Query<&mut Style, With<VerticalSpeedIndicatorNeedle>>,
 ) {
     let mut style = vertical_speed_indicator_queryset.single_mut();
-    style.top = Val::Percent((-(aircraft_state.vertical_speed / (MAX_VERTICAL_SPEED / RANGE_FACTOR))).clamp(-49.0, 49.0));
+    style.top = Val::Percent(
+        (-(aircraft_state.vertical_speed / (MAX_VERTICAL_SPEED / RANGE_FACTOR))).clamp(-49.0, 49.0),
+    );
 }

@@ -2,9 +2,9 @@ mod airspeed_indicator;
 mod altimeter;
 mod artificial_horizon;
 mod heading_indicator;
+mod turn_coordinator;
 mod utils;
 mod vertical_speed_indicator;
-mod turn_coordinator;
 mod xplane_listener;
 
 use bevy::prelude::*;
