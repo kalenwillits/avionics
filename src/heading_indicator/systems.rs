@@ -68,7 +68,6 @@ pub fn spawn_heading_indicator(mut commands: Commands, asset_server: Res<AssetSe
                                 .with_text_alignment(TextAlignment::Right),
                             ));
                         });
-                    // });
                     parent.spawn((
                         Name::new("HeadingIndicatorCircle"),
                         NodeBundle {

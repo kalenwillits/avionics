@@ -102,10 +102,10 @@ impl AircraftState {
                 self.roll = *value;
             }
             if let Some(value) = payload.loc(17, 2) {
-                self.magnetic_heading = *value;
+                self.true_heading = *value;
             }
             if let Some(value) = payload.loc(17, 3) {
-                self.true_heading = *value;
+                self.magnetic_heading = *value;
             }
 
             if let Some(value) = payload.loc(3, 0) {
