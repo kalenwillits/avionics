@@ -50,6 +50,7 @@ pub fn spawn_vertical_speed_indicator(mut commands: Commands, asset_server: Res<
                                     height: Val::Px(270.0),
                                     flex_direction: FlexDirection::Column,
                                     justify_content: JustifyContent::Center,
+                                    margin: UiRect::top(Val::Px(1.0)),
                                     overflow: Overflow::clip(),
                                     align_items: AlignItems::Start,
                                     ..default()
@@ -65,10 +66,10 @@ pub fn spawn_vertical_speed_indicator(mut commands: Commands, asset_server: Res<
                                     NodeBundle {
                                         style: Style {
                                             width: Val::Px(36.0),
-                                            height: Val::Px(5.0),
-                                            margin: UiRect::top(Val::Px(0.0)),
+                                            height: Val::Px(2.0),
                                             ..default()
                                         },
+                                        z_index: ZIndex::Local(3),
                                         background_color: Color::WHITE.into(),
                                         ..default()
                                     },
