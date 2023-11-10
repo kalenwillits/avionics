@@ -1,5 +1,6 @@
 use super::components::{
     VerticalSpeedIndicator, VerticalSpeedIndicatorDigital, VerticalSpeedIndicatorNeedle,
+    VerticalSpeedIndicatorArrow
 };
 use crate::xplane_listener::AircraftState;
 use bevy::prelude::*;
@@ -8,7 +9,11 @@ const NUM_LINES: i32 = 5;
 const LINE_DISTANCE: f32 = 25.0;
 const MAX_VERTICAL_SPEED: f32 = 2000.0;
 const RANGE_FACTOR: f32 = 50.0;
-const DIGITAL_DISPLAY_HEIGHT: f32 = 16.0;
+const DIGITAL_DISPLAY_HEIGHT: f32 = 12.0;
+const RIBBON_WIDTH: f32 = 36.0;
+const UP_ARROW: &str = "+";
+const DOWN_ARROW: &str = "-";
+
 
 pub fn spawn_vertical_speed_indicator(mut commands: Commands, asset_server: Res<AssetServer>) {
     commands
@@ -46,7 +51,7 @@ pub fn spawn_vertical_speed_indicator(mut commands: Commands, asset_server: Res<
                             VerticalSpeedIndicator {},
                             NodeBundle {
                                 style: Style {
-                                    width: Val::Px(36.0),
+                                    width: Val::Px(RIBBON_WIDTH),
                                     height: Val::Px(270.0),
                                     flex_direction: FlexDirection::Column,
                                     justify_content: JustifyContent::Center,
@@ -65,7 +70,7 @@ pub fn spawn_vertical_speed_indicator(mut commands: Commands, asset_server: Res<
                                     VerticalSpeedIndicatorNeedle {},
                                     NodeBundle {
                                         style: Style {
-                                            width: Val::Px(36.0),
+                                            width: Val::Px(RIBBON_WIDTH),
                                             height: Val::Px(2.0),
                                             ..default()
                                         },
@@ -84,7 +89,7 @@ pub fn spawn_vertical_speed_indicator(mut commands: Commands, asset_server: Res<
                                                     height: Val::Px(DIGITAL_DISPLAY_HEIGHT),
                                                     justify_content: JustifyContent::Center,
                                                     align_items: AlignItems::Center,
-                                                    flex_direction: FlexDirection::Row,
+                                                    flex_direction: FlexDirection::Column,
                                                     ..default()
                                                 },
                                                 ..default()
@@ -98,7 +103,7 @@ pub fn spawn_vertical_speed_indicator(mut commands: Commands, asset_server: Res<
                                     TextStyle {
                                         font: asset_server
                                             .load("fonts/ubuntu_mono/UbuntuMono-Regular.ttf"),
-                                        font_size: 16.0,
+                                        font_size: 18.0,
                                         color: Color::WHITE,
                                         ..default()
                                     },
@@ -106,7 +111,24 @@ pub fn spawn_vertical_speed_indicator(mut commands: Commands, asset_server: Res<
                                 .with_style(Style {
                                     ..default()
                                 })
-                                .with_text_alignment(TextAlignment::Right),
+                                .with_text_alignment(TextAlignment::Center),
+                            ));
+                            parent.spawn((
+                                VerticalSpeedIndicatorArrow {},
+                                TextBundle::from_section(
+                                    "",
+                                    TextStyle {
+                                        font: asset_server
+                                            .load("fonts/ubuntu_mono/UbuntuMono-Regular.ttf"),
+                                        font_size: 18.0,
+                                        color: Color::WHITE,
+                                        ..default()
+                                    },
+                                )
+                                .with_style(Style {
+                                    ..default()
+                                })
+                                .with_text_alignment(TextAlignment::Center),
                             ));
                                         });
                                     parent.spawn((
@@ -127,7 +149,7 @@ pub fn spawn_vertical_speed_indicator(mut commands: Commands, asset_server: Res<
                                 let height: f32 = i as f32 * LINE_DISTANCE;
                                 parent.spawn(NodeBundle {
                                     style: Style {
-                                        width: Val::Px(36.0),
+                                        width: Val::Px(RIBBON_WIDTH),
                                         height: Val::Percent(height),
                                         align_items: AlignItems::Center,
                                         border: UiRect {
@@ -156,23 +178,39 @@ pub fn update_vertical_speed_indicator(
         (
             With<VerticalSpeedIndicatorDigital>,
             Without<VerticalSpeedIndicatorNeedle>,
+            Without<VerticalSpeedIndicatorArrow>,
         ),
     >,
+    mut vertical_speed_indicator_arrow_queryset: Query<
+        (&mut Text, &mut Style),
+        (
+            With<VerticalSpeedIndicatorArrow>,
+            Without<VerticalSpeedIndicatorNeedle>,
+            Without<VerticalSpeedIndicatorDigital>,
+        ),
+    >,
+
 ) {
     let mut style = vertical_speed_indicator_queryset.single_mut();
     style.top = Val::Percent(
         (-(aircraft_state.vertical_speed / (MAX_VERTICAL_SPEED / RANGE_FACTOR))).clamp(-49.0, 49.0),
     );
-    let (mut text, mut digital_style) = vertical_speed_indicator_digital_queryset.single_mut();
+    let (mut digital_text, mut digital_style) = vertical_speed_indicator_digital_queryset.single_mut();
+    let (mut arrow_text, mut arrow_style) = vertical_speed_indicator_arrow_queryset.single_mut();
     let value: i32 = ((aircraft_state.vertical_speed / 10.0).round() * 10.0) as i32;
-    if value.abs() >= 10 {
-        text.sections[0].value = format!("{}", value);
+    if value.abs() >= 100 {
+        digital_text.sections[0].value = format!("{}", value.abs());
         if value <= 0 {
-            digital_style.top = Val::Px(-DIGITAL_DISPLAY_HEIGHT);
+            arrow_style.top = Val::Px(-DIGITAL_DISPLAY_HEIGHT * 4.0);
+            arrow_text.sections[0].value = DOWN_ARROW.to_string();
+            digital_style.top = Val::Px(-DIGITAL_DISPLAY_HEIGHT); 
         } else {
-            digital_style.top = Val::Px(0.0);
+            arrow_style.top = Val::Px(DIGITAL_DISPLAY_HEIGHT);
+            arrow_text.sections[0].value = UP_ARROW.to_string();
+            digital_style.top = Val::Px(DIGITAL_DISPLAY_HEIGHT);
         }
     } else {
-        text.sections[0].value = "".to_string();
+      arrow_text.sections[0].value = "".to_string();
+      digital_text.sections[0].value = "".to_string();
     }
 }
