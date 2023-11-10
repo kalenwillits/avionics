@@ -101,6 +101,5 @@ pub fn update_turn_coordinator(
     mut turn_coordinator_queryset: Query<&mut Style, With<TurnCoordinatorBall>>,
 ) {
     let mut style = turn_coordinator_queryset.single_mut();
-    style.left =
-        Val::Percent((50.0 - (BALL_SIZE / 2.0)) - (aircraft_state.gload_side / MAX_RANGE));
+    style.left = Val::Percent((50.0 - (BALL_SIZE / 2.0)) - (aircraft_state.gload_side / MAX_RANGE));
 }
