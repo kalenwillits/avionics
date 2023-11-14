@@ -29,7 +29,7 @@ pub fn spawn_turn_coordinator(mut commands: Commands, _asset_server: Res<AssetSe
                 .spawn(NodeBundle {
                     style: Style {
                         width: Val::Percent(100.0),
-                        height: Val::Percent(27.333),
+                        height: Val::Percent(33.333),
                         flex_direction: FlexDirection::Column,
                         justify_content: JustifyContent::End,
                         align_items: AlignItems::Center,
