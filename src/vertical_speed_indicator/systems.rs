@@ -1,6 +1,6 @@
 use super::components::{
-    VerticalSpeedIndicator, VerticalSpeedIndicatorDigital, VerticalSpeedIndicatorNeedle,
-    VerticalSpeedIndicatorArrow
+    VerticalSpeedIndicator, VerticalSpeedIndicatorArrow, VerticalSpeedIndicatorDigital,
+    VerticalSpeedIndicatorNeedle,
 };
 use crate::xplane_listener::AircraftState;
 use bevy::prelude::*;
@@ -13,7 +13,6 @@ const DIGITAL_DISPLAY_HEIGHT: f32 = 12.0;
 const RIBBON_WIDTH: f32 = 36.0;
 const UP_ARROW: &str = "+";
 const DOWN_ARROW: &str = "-";
-
 
 pub fn spawn_vertical_speed_indicator(mut commands: Commands, asset_server: Res<AssetServer>) {
     commands
@@ -113,7 +112,7 @@ pub fn spawn_vertical_speed_indicator(mut commands: Commands, asset_server: Res<
                                 })
                                 .with_text_alignment(TextAlignment::Center),
                             ));
-                            parent.spawn((
+                                            parent.spawn((
                                 VerticalSpeedIndicatorArrow {},
                                 TextBundle::from_section(
                                     "",
@@ -189,13 +188,13 @@ pub fn update_vertical_speed_indicator(
             Without<VerticalSpeedIndicatorDigital>,
         ),
     >,
-
 ) {
     let mut style = vertical_speed_indicator_queryset.single_mut();
     style.top = Val::Percent(
         (-(aircraft_state.vertical_speed / (MAX_VERTICAL_SPEED / RANGE_FACTOR))).clamp(-49.0, 49.0),
     );
-    let (mut digital_text, mut digital_style) = vertical_speed_indicator_digital_queryset.single_mut();
+    let (mut digital_text, mut digital_style) =
+        vertical_speed_indicator_digital_queryset.single_mut();
     let (mut arrow_text, mut arrow_style) = vertical_speed_indicator_arrow_queryset.single_mut();
     let value: i32 = ((aircraft_state.vertical_speed / 10.0).round() * 10.0) as i32;
     if value.abs() >= 100 {
@@ -203,14 +202,14 @@ pub fn update_vertical_speed_indicator(
         if value <= 0 {
             arrow_style.top = Val::Px(-DIGITAL_DISPLAY_HEIGHT * 4.0);
             arrow_text.sections[0].value = DOWN_ARROW.to_string();
-            digital_style.top = Val::Px(-DIGITAL_DISPLAY_HEIGHT); 
+            digital_style.top = Val::Px(-DIGITAL_DISPLAY_HEIGHT);
         } else {
             arrow_style.top = Val::Px(DIGITAL_DISPLAY_HEIGHT);
             arrow_text.sections[0].value = UP_ARROW.to_string();
             digital_style.top = Val::Px(DIGITAL_DISPLAY_HEIGHT);
         }
     } else {
-      arrow_text.sections[0].value = "".to_string();
-      digital_text.sections[0].value = "".to_string();
+        arrow_text.sections[0].value = "".to_string();
+        digital_text.sections[0].value = "".to_string();
     }
 }
