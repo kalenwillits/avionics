@@ -111,47 +111,47 @@ pub fn spawn_artificial_horizon(mut commands: Commands) {
                 },
                 Name::new("BelowHorizon"),
             ));
-        }).with_children(|parent| {
+        })
+        .with_children(|parent| {
             parent
-                    .spawn(NodeBundle {
-                        style: Style {
-                            width: Val::Percent(100.0),
-                            height: Val::Percent(100.0),
-                            flex_direction: FlexDirection::Column,
-                            align_items: AlignItems::Center,
-                            justify_content: JustifyContent::Center,
-                            position_type: PositionType::Absolute,
-                            ..default()
-                        },
-                        z_index: ZIndex::Local(10),
+                .spawn(NodeBundle {
+                    style: Style {
+                        width: Val::Percent(100.0),
+                        height: Val::Percent(100.0),
+                        flex_direction: FlexDirection::Column,
+                        align_items: AlignItems::Center,
+                        justify_content: JustifyContent::Center,
+                        position_type: PositionType::Absolute,
                         ..default()
-                    })
-                    .with_children(|parent| {
-                        parent
-                            .spawn(NodeBundle {
+                    },
+                    z_index: ZIndex::Local(10),
+                    ..default()
+                })
+                .with_children(|parent| {
+                    parent
+                        .spawn(NodeBundle {
+                            style: Style {
+                                width: Val::Px(BANK_ANGLE_TICK_WIDTH),
+                                height: Val::Percent(BANK_ANGLE_RADIUS - BANK_ANGLE_TICK_SIZE),
+                                flex_direction: FlexDirection::Column,
+                                align_items: AlignItems::Start,
+                                justify_content: JustifyContent::Start,
+                                ..default()
+                            },
+                            ..default()
+                        })
+                        .with_children(|parent| {
+                            parent.spawn(NodeBundle {
                                 style: Style {
-                                    width: Val::Px(BANK_ANGLE_TICK_WIDTH),
-                                    height: Val::Percent(BANK_ANGLE_RADIUS - BANK_ANGLE_TICK_SIZE),
-                                    flex_direction: FlexDirection::Column,
-                                    align_items: AlignItems::Start,
-                                    justify_content: JustifyContent::Start,
+                                    height: Val::Percent(BANK_ANGLE_TICK_SIZE * 2.0),
+                                    width: Val::Percent(100.0),
                                     ..default()
                                 },
+                                background_color: Color::WHITE.into(),
                                 ..default()
-                            })
-                            .with_children(|parent| {
-                                parent.spawn(NodeBundle {
-                                    style: Style {
-                                        height: Val::Percent(BANK_ANGLE_TICK_SIZE * 2.0),
-                                        width: Val::Percent(100.0),
-                                        ..default()
-                                    },
-                                    background_color: Color::WHITE.into(),
-                                    ..default()
-                                });
                             });
-                    });
-
+                        });
+                });
         });
 }
 
