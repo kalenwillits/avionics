@@ -1,6 +1,7 @@
 mod airspeed_indicator;
 mod altimeter;
 mod artificial_horizon;
+mod bank_angle_indicator;
 mod heading_indicator;
 mod turn_coordinator;
 mod utils;
@@ -26,6 +27,7 @@ fn main() {
             }),
             xplane_listener::XPlaneListener,
             artificial_horizon::ArtificialHorizonPlugin,
+            bank_angle_indicator::BankAngleIndicatorPlugin,
             airspeed_indicator::AirSpeedIndicatorPlugin,
             vertical_speed_indicator::VerticalSpeedIndicatorPlugin,
             turn_coordinator::TurnCoordinatorPlugin,

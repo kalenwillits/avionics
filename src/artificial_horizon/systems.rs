@@ -4,12 +4,6 @@ use crate::xplane_listener::AircraftState;
 use bevy::prelude::*;
 
 const NUM_PITCH_LINES: usize = 16;
-const BANK_ANGLE_RADIUS: f32 = 33.3;
-const BANK_ANGLE_TICK_WIDTH: f32 = 1.0;
-const BANK_ANGLE_TICK_SIZE: f32 = 3.3;
-const BANK_ANGLE_DEGREES: [f32; 11] = [
-    -67.0, -45.0, -30.0, -20.0, -10.0, 0.0, 10.0, 20.0, 30.0, 45.0, 67.0,
-];
 
 pub fn spawn_artificial_horizon(mut commands: Commands) {
     commands
@@ -33,51 +27,6 @@ pub fn spawn_artificial_horizon(mut commands: Commands) {
             ArtificialHorizon {},
         ))
         .with_children(|parent| {
-            for degree in BANK_ANGLE_DEGREES.iter() {
-                parent
-                    .spawn(NodeBundle {
-                        style: Style {
-                            width: Val::Percent(100.0),
-                            height: Val::Percent(100.0),
-                            flex_direction: FlexDirection::Column,
-                            align_items: AlignItems::Center,
-                            justify_content: JustifyContent::Center,
-                            position_type: PositionType::Absolute,
-                            ..default()
-                        },
-                        z_index: ZIndex::Local(10),
-                        ..default()
-                    })
-                    .with_children(|parent| {
-                        parent
-                            .spawn(NodeBundle {
-                                style: Style {
-                                    width: Val::Px(BANK_ANGLE_TICK_WIDTH),
-                                    height: Val::Percent(BANK_ANGLE_RADIUS),
-                                    flex_direction: FlexDirection::Column,
-                                    align_items: AlignItems::Start,
-                                    justify_content: JustifyContent::Start,
-                                    ..default()
-                                },
-                                transform: Transform {
-                                    rotation: Quat::from_rotation_z(degrees_to_radians(*degree)),
-                                    ..default()
-                                },
-                                ..default()
-                            })
-                            .with_children(|parent| {
-                                parent.spawn(NodeBundle {
-                                    style: Style {
-                                        height: Val::Percent(BANK_ANGLE_TICK_SIZE),
-                                        width: Val::Percent(100.0),
-                                        ..default()
-                                    },
-                                    background_color: Color::WHITE.into(),
-                                    ..default()
-                                });
-                            });
-                    });
-            }
             parent.spawn((
                 NodeBundle {
                     style: Style {
@@ -111,47 +60,6 @@ pub fn spawn_artificial_horizon(mut commands: Commands) {
                 },
                 Name::new("BelowHorizon"),
             ));
-        })
-        .with_children(|parent| {
-            parent
-                .spawn(NodeBundle {
-                    style: Style {
-                        width: Val::Percent(100.0),
-                        height: Val::Percent(100.0),
-                        flex_direction: FlexDirection::Column,
-                        align_items: AlignItems::Center,
-                        justify_content: JustifyContent::Center,
-                        position_type: PositionType::Absolute,
-                        ..default()
-                    },
-                    z_index: ZIndex::Local(10),
-                    ..default()
-                })
-                .with_children(|parent| {
-                    parent
-                        .spawn(NodeBundle {
-                            style: Style {
-                                width: Val::Px(BANK_ANGLE_TICK_WIDTH),
-                                height: Val::Percent(BANK_ANGLE_RADIUS - BANK_ANGLE_TICK_SIZE),
-                                flex_direction: FlexDirection::Column,
-                                align_items: AlignItems::Start,
-                                justify_content: JustifyContent::Start,
-                                ..default()
-                            },
-                            ..default()
-                        })
-                        .with_children(|parent| {
-                            parent.spawn(NodeBundle {
-                                style: Style {
-                                    height: Val::Percent(BANK_ANGLE_TICK_SIZE * 2.0),
-                                    width: Val::Percent(100.0),
-                                    ..default()
-                                },
-                                background_color: Color::WHITE.into(),
-                                ..default()
-                            });
-                        });
-                });
         });
 }
 
