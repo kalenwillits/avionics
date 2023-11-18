@@ -4,9 +4,12 @@ mod artificial_horizon;
 mod bank_angle_indicator;
 mod heading_indicator;
 mod turn_coordinator;
-mod utils;
 mod vertical_speed_indicator;
+mod panel_left;
+mod panel_right;
+
 mod xplane_listener;
+mod utils;
 
 use bevy::prelude::*;
 
@@ -33,6 +36,8 @@ fn main() {
             turn_coordinator::TurnCoordinatorPlugin,
             altimeter::AltimeterPlugin,
             heading_indicator::HeadingIndicatorPlugin,
+            panel_left::PanelLeftPlugin,
+            panel_right::PanelRightPlugin,
         ))
         .run();
 }
