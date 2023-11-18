@@ -7,6 +7,7 @@ mod turn_coordinator;
 mod vertical_speed_indicator;
 mod panel_left;
 mod panel_right;
+mod tachometer;
 
 mod xplane_listener;
 mod utils;
