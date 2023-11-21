@@ -69,7 +69,7 @@ pub fn spawn_panel_left(mut commands: Commands, asset_server: Res<AssetServer>) 
                                                 font: asset_server.load(
                                                     "fonts/ubuntu_mono/UbuntuMono-Regular.ttf",
                                                 ),
-                                                font_size: 16.0,
+                                                font_size: 24.0,
                                                 color: Color::WHITE,
                                                 ..default()
                                             },
@@ -89,7 +89,7 @@ pub fn spawn_panel_left(mut commands: Commands, asset_server: Res<AssetServer>) 
                                                 font: asset_server.load(
                                                     "fonts/ubuntu_mono/UbuntuMono-Regular.ttf",
                                                 ),
-                                                font_size: 16.0,
+                                                font_size: 24.0,
                                                 color: Color::WHITE,
                                                 ..default()
                                             },
