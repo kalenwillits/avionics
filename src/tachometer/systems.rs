@@ -56,8 +56,7 @@ pub fn spawn_tachometer(mut commands: Commands, _asset_server: Res<AssetServer>)
                             },
                         ))
                         .with_children(|parent| {
-                            parent.spawn((
-                                TachometerBall {},
+                            parent.spawn(
                                 NodeBundle {
                                     style: Style {
                                         width: Val::Px(BALL_SIZE),
@@ -68,7 +67,7 @@ pub fn spawn_tachometer(mut commands: Commands, _asset_server: Res<AssetServer>)
                                     background_color: Color::WHITE.into(),
                                     ..default()
                                 },
-                            ));
+                            );
                             parent.spawn(NodeBundle {
                                 style: Style {
                                     width: Val::Px(1.0),
@@ -98,8 +97,7 @@ pub fn spawn_tachometer(mut commands: Commands, _asset_server: Res<AssetServer>)
 
 pub fn update_tachometer(
     aircraft_state: Res<AircraftState>,
-    mut tachometer_queryset: Query<&mut Style, With<TachometerBall>>,
+    mut tachometer_queryset: Query<&mut Style>,
 ) {
     let mut style = tachometer_queryset.single_mut();
-    style.left = Val::Percent((50.0 - (BALL_SIZE / 2.0)) - (aircraft_state.gload_side / MAX_RANGE));
 }
