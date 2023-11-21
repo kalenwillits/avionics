@@ -89,6 +89,7 @@ pub struct AircraftState {
     pub indicated_altitude: f32,
     pub origin_latitude: f32,
     pub origin_longitude: f32,
+    pub engine_rpm: f32,
 }
 
 impl AircraftState {
@@ -157,6 +158,10 @@ impl AircraftState {
             }
             if let Some(value) = payload.loc(20, 7) {
                 self.origin_longitude = *value;
+            }
+
+            if let Some(value) = payload.loc(37, 0) {
+                self.engine_rpm = *value;
             }
         };
     }

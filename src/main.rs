@@ -3,14 +3,13 @@ mod altimeter;
 mod artificial_horizon;
 mod bank_angle_indicator;
 mod heading_indicator;
-mod turn_coordinator;
-mod vertical_speed_indicator;
 mod panel_left;
 mod panel_right;
-mod tachometer;
+mod turn_coordinator;
+mod vertical_speed_indicator;
 
-mod xplane_listener;
 mod utils;
+mod xplane_listener;
 
 use bevy::prelude::*;
 

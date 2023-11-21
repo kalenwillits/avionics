@@ -10,4 +10,3 @@ impl Plugin for PanelRightPlugin {
         app.add_systems(Startup, systems::spawn_panel_right);
     }
 }
-
