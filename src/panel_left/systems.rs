@@ -1,4 +1,4 @@
-use super::components::{PanelLeft, TachometerValue};
+use super::components::{PanelLeft, TachometerNeedle, TachometerValue};
 use crate::xplane_listener::AircraftState;
 use bevy::prelude::*;
 
@@ -62,58 +62,84 @@ pub fn spawn_panel_left(mut commands: Commands, asset_server: Res<AssetServer>) 
                                     ..default()
                                 },))
                                 .with_children(|parent| {
-                                    parent.spawn(
-                                        TextBundle::from_section(
-                                            "RPM",
-                                            TextStyle {
-                                                font: asset_server.load(
-                                                    "fonts/ubuntu_mono/UbuntuMono-Regular.ttf",
-                                                ),
-                                                font_size: 24.0,
-                                                color: Color::WHITE,
+                                    parent
+                                        .spawn(NodeBundle {
+                                            style: Style {
+                                                justify_content: JustifyContent::Start,
+                                                align_items: AlignItems::Start,
+                                                width: Val::Percent(100.0),
                                                 ..default()
                                             },
-                                        )
-                                        .with_style(
-                                            Style {
-                                                // flex_grow: -1.0,
+                                            ..default()
+                                        })
+                                        .with_children(|parent| {
+                                            parent.spawn(TextBundle::from_section(
+                                                "RPM",
+                                                TextStyle {
+                                                    font: asset_server.load(
+                                                        "fonts/ubuntu_mono/UbuntuMono-Regular.ttf",
+                                                    ),
+                                                    font_size: 24.0,
+                                                    color: Color::WHITE,
+                                                    ..default()
+                                                },
+                                            ));
+                                        });
+                                    parent
+                                        .spawn(NodeBundle {
+                                            style: Style {
+                                                justify_content: JustifyContent::End,
+                                                align_items: AlignItems::End,
+                                                width: Val::Percent(100.0),
                                                 ..default()
                                             },
-                                        ),
-                                    );
-                                    parent.spawn((
+                                            ..default()
+                                        })
+                                        .with_children(|parent| {
+                                            parent.spawn((
                                         TachometerValue {},
                                         TextBundle::from_section(
-                                            "0",
+                                            "---",
                                             TextStyle {
                                                 font: asset_server.load(
                                                     "fonts/ubuntu_mono/UbuntuMono-Regular.ttf",
                                                 ),
                                                 font_size: 24.0,
                                                 color: Color::WHITE,
-                                                ..default()
-                                            },
-                                        )
-                                        .with_style(
-                                            Style {
-                                                // flex_grow: -1.0,
                                                 ..default()
                                             },
                                         ),
                                     ));
+                                        });
                                 });
-                            parent.spawn(NodeBundle {
-                                style: Style {
-                                    width: Val::Percent(100.0),
-                                    height: Val::Px(4.0),
-                                    flex_direction: FlexDirection::Column,
-                                    justify_content: JustifyContent::Start,
-                                    align_items: AlignItems::Start,
+                            parent
+                                .spawn(NodeBundle {
+                                    style: Style {
+                                        width: Val::Percent(100.0),
+                                        height: Val::Px(4.0),
+                                        flex_direction: FlexDirection::Column,
+                                        justify_content: JustifyContent::Center,
+                                        align_items: AlignItems::Start,
+                                        ..default()
+                                    },
+                                    background_color: Color::GRAY.into(),
                                     ..default()
-                                },
-                                background_color: Color::GRAY.into(),
-                                ..default()
-                            });
+                                })
+                                .with_children(|parent| {
+                                    parent.spawn((
+                                        TachometerNeedle {},
+                                        NodeBundle {
+                                            style: Style {
+                                                height: Val::Px(8.0),
+                                                width: Val::Px(4.0),
+                                                position_type: PositionType::Absolute,
+                                                ..default()
+                                            },
+                                            background_color: Color::WHITE.into(),
+                                            ..default()
+                                        },
+                                    ));
+                                });
                         });
                 });
         });
@@ -122,8 +148,13 @@ pub fn spawn_panel_left(mut commands: Commands, asset_server: Res<AssetServer>) 
 pub fn update_tachometer(
     aircraft_state: Res<AircraftState>,
     mut tachometer_value_queryset: Query<&mut Text, With<TachometerValue>>,
+    // mut tachometer_needle_queryset: Query<&mut Style, With<TachometerNeedle>>,
 ) {
     let mut tachometer_value_text = tachometer_value_queryset.single_mut();
     let value: f32 = aircraft_state.engine_rpm.round();
     tachometer_value_text.sections[0].value = format!("{}", value);
+
+    // TODO - Aircraft min/max from profile.
+    // let mut tachometer_needle_style = tachometer_needle_queryset.single_mut();
+    // tachometer_needle_style.left = Val::Px(50.0);
 }
