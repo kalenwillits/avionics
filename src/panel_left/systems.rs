@@ -38,12 +38,12 @@ pub fn spawn_panel_left(mut commands: Commands, asset_server: Res<AssetServer>) 
                     parent
                         .spawn(NodeBundle {
                             style: Style {
-                                width: Val::Percent(98.0),
+                                width: Val::Percent(96.0),
                                 height: Val::Px(32.0),
                                 flex_direction: FlexDirection::Column,
                                 justify_content: JustifyContent::Start,
                                 align_items: AlignItems::Start,
-                                margin: UiRect::all(Val::Px(2.0)),
+                                margin: UiRect::all(Val::Px(4.0)),
                                 ..default()
                             },
                             ..default()
@@ -53,7 +53,7 @@ pub fn spawn_panel_left(mut commands: Commands, asset_server: Res<AssetServer>) 
                                 .spawn((NodeBundle {
                                     style: Style {
                                         width: Val::Percent(100.0),
-                                        height: Val::Percent(80.0),
+                                        height: Val::Percent(100.0),
                                         flex_direction: FlexDirection::Row,
                                         justify_content: JustifyContent::SpaceEvenly,
                                         align_items: AlignItems::Center,
