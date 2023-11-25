@@ -8,6 +8,7 @@ mod panel_right;
 mod turn_coordinator;
 mod vertical_speed_indicator;
 
+mod database;
 mod utils;
 mod xplane_listener;
 
@@ -17,6 +18,7 @@ const STEAM_DECK_RESOLUTION: (f32, f32) = (1280f32, 800f32);
 
 fn main() {
     App::new()
+        .insert_resource(database::connect())
         .add_systems(Startup, setup)
         .add_plugins((
             DefaultPlugins.set(WindowPlugin {
