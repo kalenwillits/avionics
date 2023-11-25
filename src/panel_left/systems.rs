@@ -1,14 +1,14 @@
 use super::components::{PanelLeft, TachometerNeedle, TachometerValue};
-use sqlite;
-use crate::xplane_listener::AircraftState;
 use crate::database::resources::Database;
+use crate::xplane_listener::AircraftState;
 use bevy::prelude::*;
+use sqlite;
 
 pub fn spawn_panel_left(
-    mut commands: Commands, 
+    mut commands: Commands,
     asset_server: Res<AssetServer>,
     database: Res<Database>,
-    ) {
+) {
     commands
         .spawn(NodeBundle {
             style: Style {
@@ -41,49 +41,50 @@ pub fn spawn_panel_left(
                     PanelLeft {},
                 ))
                 .with_children(|parent| {
-                    let mut statement = database.connection.prepare("SELECT * FROM ENGINE").unwrap(); 
+                    let mut statement =
+                        database.connection.prepare("SELECT * FROM ENGINE").unwrap();
                     while let Ok(sqlite::State::Row) = statement.next() {
                         let min_rpm = statement.read::<i64, _>("RPM_MIN").unwrap();
                         let max_rpm = statement.read::<i64, _>("RPM_MAX").unwrap();
-                    parent
-                        .spawn(NodeBundle {
-                            style: Style {
-                                width: Val::Percent(96.0),
-                                height: Val::Px(32.0),
-                                flex_direction: FlexDirection::Column,
-                                justify_content: JustifyContent::Start,
-                                align_items: AlignItems::Start,
-                                margin: UiRect::all(Val::Px(4.0)),
-                                ..default()
-                            },
-                            ..default()
-                        })
-                        .with_children(|parent| {
-                            parent
-                                .spawn((NodeBundle {
-                                    style: Style {
-                                        width: Val::Percent(100.0),
-                                        height: Val::Percent(100.0),
-                                        flex_direction: FlexDirection::Row,
-                                        justify_content: JustifyContent::SpaceEvenly,
-                                        align_items: AlignItems::Center,
-                                        ..default()
-                                    },
+                        parent
+                            .spawn(NodeBundle {
+                                style: Style {
+                                    width: Val::Percent(96.0),
+                                    height: Val::Px(32.0),
+                                    flex_direction: FlexDirection::Column,
+                                    justify_content: JustifyContent::Start,
+                                    align_items: AlignItems::Start,
+                                    margin: UiRect::all(Val::Px(4.0)),
                                     ..default()
-                                },))
-                                .with_children(|parent| {
-                                    parent
-                                        .spawn(NodeBundle {
-                                            style: Style {
-                                                justify_content: JustifyContent::Start,
-                                                align_items: AlignItems::Start,
-                                                width: Val::Percent(100.0),
-                                                ..default()
-                                            },
+                                },
+                                ..default()
+                            })
+                            .with_children(|parent| {
+                                parent
+                                    .spawn((NodeBundle {
+                                        style: Style {
+                                            width: Val::Percent(100.0),
+                                            height: Val::Percent(100.0),
+                                            flex_direction: FlexDirection::Row,
+                                            justify_content: JustifyContent::SpaceEvenly,
+                                            align_items: AlignItems::Center,
                                             ..default()
-                                        })
-                                        .with_children(|parent| {
-                                            parent.spawn(TextBundle::from_section(
+                                        },
+                                        ..default()
+                                    },))
+                                    .with_children(|parent| {
+                                        parent
+                                            .spawn(NodeBundle {
+                                                style: Style {
+                                                    justify_content: JustifyContent::Start,
+                                                    align_items: AlignItems::Start,
+                                                    width: Val::Percent(100.0),
+                                                    ..default()
+                                                },
+                                                ..default()
+                                            })
+                                            .with_children(|parent| {
+                                                parent.spawn(TextBundle::from_section(
                                                 "RPM",
                                                 TextStyle {
                                                     font: asset_server.load(
@@ -94,19 +95,19 @@ pub fn spawn_panel_left(
                                                     ..default()
                                                 },
                                             ));
-                                        });
-                                    parent
-                                        .spawn(NodeBundle {
-                                            style: Style {
-                                                justify_content: JustifyContent::End,
-                                                align_items: AlignItems::End,
-                                                width: Val::Percent(100.0),
+                                            });
+                                        parent
+                                            .spawn(NodeBundle {
+                                                style: Style {
+                                                    justify_content: JustifyContent::End,
+                                                    align_items: AlignItems::End,
+                                                    width: Val::Percent(100.0),
+                                                    ..default()
+                                                },
                                                 ..default()
-                                            },
-                                            ..default()
-                                        })
-                                        .with_children(|parent| {
-                                            parent.spawn((
+                                            })
+                                            .with_children(|parent| {
+                                                parent.spawn((
                                         TachometerValue {},
                                         TextBundle::from_section(
                                             "---",
@@ -120,38 +121,38 @@ pub fn spawn_panel_left(
                                             },
                                         ),
                                     ));
-                                        });
-                                });
-                            parent
-                                .spawn(NodeBundle {
-                                    style: Style {
-                                        width: Val::Percent(100.0),
-                                        height: Val::Px(4.0),
-                                        flex_direction: FlexDirection::Column,
-                                        justify_content: JustifyContent::Center,
-                                        align_items: AlignItems::Start,
-                                        ..default()
-                                    },
-                                    background_color: Color::GRAY.into(),
-                                    ..default()
-                                })
-                                .with_children(|parent| {
-                                    parent.spawn((
-                                        TachometerNeedle {},
-                                        NodeBundle {
-                                            style: Style {
-                                                height: Val::Px(8.0),
-                                                width: Val::Px(4.0),
-                                                position_type: PositionType::Absolute,
-                                                ..default()
-                                            },
-                                            background_color: Color::WHITE.into(),
+                                            });
+                                    });
+                                parent
+                                    .spawn(NodeBundle {
+                                        style: Style {
+                                            width: Val::Percent(100.0),
+                                            height: Val::Px(4.0),
+                                            flex_direction: FlexDirection::Column,
+                                            justify_content: JustifyContent::Center,
+                                            align_items: AlignItems::Start,
                                             ..default()
                                         },
-                                    ));
-                                });
-                        });
-                    };
+                                        background_color: Color::GRAY.into(),
+                                        ..default()
+                                    })
+                                    .with_children(|parent| {
+                                        parent.spawn((
+                                            TachometerNeedle {},
+                                            NodeBundle {
+                                                style: Style {
+                                                    height: Val::Px(8.0),
+                                                    width: Val::Px(4.0),
+                                                    position_type: PositionType::Absolute,
+                                                    ..default()
+                                                },
+                                                background_color: Color::WHITE.into(),
+                                                ..default()
+                                            },
+                                        ));
+                                    });
+                            });
+                    }
                 });
         });
 }
