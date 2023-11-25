@@ -18,9 +18,12 @@ fn init_table<const COUNT: usize>(
     connection: &sqlite::ConnectionThreadSafe,
 ) {
     let mut query: String = format!("CREATE TABLE IF NOT EXISTS {} ( ", table.name);
-    query += "ID TEXT";
+    query += "PK INTEGER NOT NULL PRIMARY KEY";
     for (i, column) in table.columns.iter().enumerate() {
-        query += format!("{} {}", column.name, "").as_str();
+        if i == 0 {
+            query += ", "
+        };
+        query += format!("{} {}", column.name, column.typedef()).as_str();
         if (i + 1) < table.columns.len() {
             query += ", ";
         } else {
@@ -41,26 +44,26 @@ pub struct Column<T> {
 }
 
 impl Column<DataType> {
-    pub fn def(&self) -> String {
-        let mut typedef: String;
+    pub fn typedef(&self) -> String {
+        let def: String;
         match self.datatype {
             DataType::Null => {
-                typedef = "NULL".to_string();
+                def = "NULL".to_string();
             }
             DataType::Integer => {
-                typedef = "INTEGER".to_string();
+                def = "INTEGER".to_string();
             }
             DataType::Real => {
-                typedef = "REAL".to_string();
+                def = "REAL".to_string();
             }
             DataType::Text => {
-                typedef = "TEXT".to_string();
+                def = "TEXT".to_string();
             }
             DataType::Blob => {
-                typedef = "BLOB".to_string();
+                def = "BLOB".to_string();
             }
         };
-        format!("{} {} NOT NULL", self.name, typedef)
+        format!("{} NOT NULL", def)
     }
 }
 

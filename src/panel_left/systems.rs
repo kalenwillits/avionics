@@ -1,8 +1,14 @@
 use super::components::{PanelLeft, TachometerNeedle, TachometerValue};
+use sqlite;
 use crate::xplane_listener::AircraftState;
+use crate::database::resources::Database;
 use bevy::prelude::*;
 
-pub fn spawn_panel_left(mut commands: Commands, asset_server: Res<AssetServer>) {
+pub fn spawn_panel_left(
+    mut commands: Commands, 
+    asset_server: Res<AssetServer>,
+    database: Res<Database>,
+    ) {
     commands
         .spawn(NodeBundle {
             style: Style {
@@ -35,6 +41,10 @@ pub fn spawn_panel_left(mut commands: Commands, asset_server: Res<AssetServer>) 
                     PanelLeft {},
                 ))
                 .with_children(|parent| {
+                    let mut statement = database.connection.prepare("SELECT * FROM ENGINE").unwrap(); 
+                    while let Ok(sqlite::State::Row) = statement.next() {
+                        let min_rpm = statement.read::<i64, _>("RPM_MIN").unwrap();
+                        let max_rpm = statement.read::<i64, _>("RPM_MAX").unwrap();
                     parent
                         .spawn(NodeBundle {
                             style: Style {
@@ -141,6 +151,7 @@ pub fn spawn_panel_left(mut commands: Commands, asset_server: Res<AssetServer>) 
                                     ));
                                 });
                         });
+                    };
                 });
         });
 }
@@ -150,9 +161,10 @@ pub fn update_tachometer(
     mut tachometer_value_queryset: Query<&mut Text, With<TachometerValue>>,
     // mut tachometer_needle_queryset: Query<&mut Style, With<TachometerNeedle>>,
 ) {
-    let mut tachometer_value_text = tachometer_value_queryset.single_mut();
-    let value: f32 = aircraft_state.engine_rpm.round();
-    tachometer_value_text.sections[0].value = format!("{}", value);
+    for mut tachometer_value_text in tachometer_value_queryset.iter_mut() {
+        let value: f32 = aircraft_state.engine_rpm.round();
+        tachometer_value_text.sections[0].value = format!("{}", value);
+    }
 
     // TODO - Aircraft min/max from profile.
     // let mut tachometer_needle_style = tachometer_needle_queryset.single_mut();
