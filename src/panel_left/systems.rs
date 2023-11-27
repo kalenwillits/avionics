@@ -49,11 +49,14 @@ pub fn spawn_panel_left(
                         ",
                         )
                         .unwrap();
-                    let mut engine_num: usize = 0;
+                    let mut engine_index: usize = 0;
                     while let Ok(sqlite::State::Row) = statement.next() {
-                        engine_num += 1;
                         let min_rpm = statement.read::<i64, _>("RPM_MIN").unwrap();
                         let max_rpm = statement.read::<i64, _>("RPM_MAX").unwrap();
+                        let engine_component = match engine_index {
+                            0 => EngineOne { min_rpm, max_rpm },
+                            _ => panic!("Unsupported number of engines!"),
+                        };
                         parent
                             .spawn(NodeBundle {
                                 style: Style {
@@ -115,7 +118,7 @@ pub fn spawn_panel_left(
                                                 ..default()
                                             })
                                             .with_children(|parent| {
-                                                let mut tachometer_entity = parent.spawn((
+                                                parent.spawn((
                                         TachometerValue {},
                                         TextBundle::from_section(
                                             "---",
@@ -128,10 +131,7 @@ pub fn spawn_panel_left(
                                                 ..default()
                                             },
                                         ),
-                                    ));
-                                                if engine_num == 1 {
-                                                    tachometer_entity.insert(EngineOne {});
-                                                };
+                                    )).insert(engine_component);
                                             });
                                     });
                                 parent
@@ -148,24 +148,24 @@ pub fn spawn_panel_left(
                                         ..default()
                                     })
                                     .with_children(|parent| {
-                                        let mut tachometer_needle_entity = parent.spawn((
-                                            TachometerNeedle {},
-                                            NodeBundle {
-                                                style: Style {
-                                                    height: Val::Px(8.0),
-                                                    width: Val::Px(4.0),
-                                                    position_type: PositionType::Absolute,
+                                        parent
+                                            .spawn((
+                                                TachometerNeedle {},
+                                                NodeBundle {
+                                                    style: Style {
+                                                        height: Val::Px(8.0),
+                                                        width: Val::Px(4.0),
+                                                        position_type: PositionType::Absolute,
+                                                        ..default()
+                                                    },
+                                                    background_color: Color::WHITE.into(),
                                                     ..default()
                                                 },
-                                                background_color: Color::WHITE.into(),
-                                                ..default()
-                                            },
-                                        ));
-                                        if engine_num == 1 {
-                                            tachometer_needle_entity.insert(EngineOne {});
-                                        };
+                                            ))
+                                            .insert(engine_component);
                                     });
                             });
+                        engine_index += 1;
                     }
                 });
         });
@@ -174,17 +174,23 @@ pub fn spawn_panel_left(
 pub fn update_engine_one_tachometer(
     aircraft_state: Res<AircraftState>,
     mut engine_one_tachometer_value_queryset: Query<
-        &mut Text,
+        (&mut Text, &EngineOne),
         (With<TachometerValue>, With<EngineOne>),
     >,
-    // mut tachometer_needle_queryset: Query<&mut Style, With<TachometerNeedle>>,
+    mut engine_one_tachometer_needle_queryset: Query<
+        (&mut Style, &EngineOne),
+        (With<TachometerNeedle>, With<EngineOne>),
+    >,
 ) {
-    for mut tachometer_value_text in engine_one_tachometer_value_queryset.iter_mut() {
-        let value: f32 = aircraft_state.engine_rpm.round();
+    let value: f32 = aircraft_state.engine_rpm.round();
+
+    for (mut tachometer_value_text, _engine_one) in engine_one_tachometer_value_queryset.iter_mut()
+    {
         tachometer_value_text.sections[0].value = format!("{}", value);
     }
-
-    // TODO - Aircraft min/max from profile.
-    // let mut tachometer_needle_style = tachometer_needle_queryset.single_mut();
-    // tachometer_needle_style.left = Val::Px(50.0);
+    for (mut tachometer_needle_style, engine_one) in
+        engine_one_tachometer_needle_queryset.iter_mut()
+    {
+        tachometer_needle_style.left = Val::Percent((value / engine_one.max_rpm as f32) * 100.0);
+    }
 }

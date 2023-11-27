@@ -9,5 +9,8 @@ pub struct TachometerValue;
 #[derive(Component)]
 pub struct TachometerNeedle;
 
-#[derive(Component)]
-pub struct EngineOne;
+#[derive(Component, Copy, Clone)]
+pub struct EngineOne {
+    pub min_rpm: i64,
+    pub max_rpm: i64,
+}
