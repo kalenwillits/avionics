@@ -1,4 +1,4 @@
-use super::components::{PanelLeft, TachometerNeedle, TachometerValue};
+use super::components::{EngineOne, PanelLeft, TachometerNeedle, TachometerValue};
 use crate::database::resources::Database;
 use crate::xplane_listener::AircraftState;
 use bevy::prelude::*;
@@ -41,9 +41,17 @@ pub fn spawn_panel_left(
                     PanelLeft {},
                 ))
                 .with_children(|parent| {
-                    let mut statement =
-                        database.connection.prepare("SELECT * FROM ENGINE").unwrap();
+                    let mut statement = database
+                        .connection
+                        .prepare(
+                            "
+                            SELECT * FROM ENGINE WHERE AIRCRAFT IN (SELECT AIRCRAFT FROM CONFIG)
+                        ",
+                        )
+                        .unwrap();
+                    let mut engine_num: usize = 0;
                     while let Ok(sqlite::State::Row) = statement.next() {
+                        engine_num += 1;
                         let min_rpm = statement.read::<i64, _>("RPM_MIN").unwrap();
                         let max_rpm = statement.read::<i64, _>("RPM_MAX").unwrap();
                         parent
@@ -107,7 +115,7 @@ pub fn spawn_panel_left(
                                                 ..default()
                                             })
                                             .with_children(|parent| {
-                                                parent.spawn((
+                                                let mut tachometer_entity = parent.spawn((
                                         TachometerValue {},
                                         TextBundle::from_section(
                                             "---",
@@ -121,6 +129,9 @@ pub fn spawn_panel_left(
                                             },
                                         ),
                                     ));
+                                                if engine_num == 1 {
+                                                    tachometer_entity.insert(EngineOne {});
+                                                };
                                             });
                                     });
                                 parent
@@ -137,7 +148,7 @@ pub fn spawn_panel_left(
                                         ..default()
                                     })
                                     .with_children(|parent| {
-                                        parent.spawn((
+                                        let mut tachometer_needle_entity = parent.spawn((
                                             TachometerNeedle {},
                                             NodeBundle {
                                                 style: Style {
@@ -150,6 +161,9 @@ pub fn spawn_panel_left(
                                                 ..default()
                                             },
                                         ));
+                                        if engine_num == 1 {
+                                            tachometer_needle_entity.insert(EngineOne {});
+                                        };
                                     });
                             });
                     }
@@ -157,12 +171,15 @@ pub fn spawn_panel_left(
         });
 }
 
-pub fn update_tachometer(
+pub fn update_engine_one_tachometer(
     aircraft_state: Res<AircraftState>,
-    mut tachometer_value_queryset: Query<&mut Text, With<TachometerValue>>,
+    mut engine_one_tachometer_value_queryset: Query<
+        &mut Text,
+        (With<TachometerValue>, With<EngineOne>),
+    >,
     // mut tachometer_needle_queryset: Query<&mut Style, With<TachometerNeedle>>,
 ) {
-    for mut tachometer_value_text in tachometer_value_queryset.iter_mut() {
+    for mut tachometer_value_text in engine_one_tachometer_value_queryset.iter_mut() {
         let value: f32 = aircraft_state.engine_rpm.round();
         tachometer_value_text.sections[0].value = format!("{}", value);
     }

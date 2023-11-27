@@ -10,6 +10,8 @@ pub fn connect() -> resources::Database {
         .expect("Unable to access data file!");
     init_table(ddl::AIRCRAFT, &connection);
     init_table(ddl::ENGINE, &connection);
+    init_table(ddl::PILOT, &connection);
+    init_table(ddl::CONFIG, &connection);
     resources::Database { connection }
 }
 
