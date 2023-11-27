@@ -32,7 +32,7 @@ pub const AIRCRAFT: Table<Column<DataType>, 3> = Table {
     ],
 };
 
-pub const ENGINE: Table<Column<DataType>, 5> = Table {
+pub const ENGINE: Table<Column<DataType>, 7> = Table {
     name: "ENGINE",
     columns: [
         Column {
@@ -49,6 +49,14 @@ pub const ENGINE: Table<Column<DataType>, 5> = Table {
         },
         Column {
             name: "RPM_MAX",
+            datatype: DataType::Integer,
+        },
+        Column {
+            name: "NORMAL_OPERATING_MIN",
+            datatype: DataType::Integer,
+        },
+        Column {
+            name: "NORMAL_OPERATING_MAX",
             datatype: DataType::Integer,
         },
         Column {

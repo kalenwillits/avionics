@@ -11,6 +11,8 @@ pub struct TachometerNeedle;
 
 #[derive(Component, Copy, Clone)]
 pub struct EngineOne {
-    pub min_rpm: i64,
-    pub max_rpm: i64,
+    pub rpm_min: i64,
+    pub rpm_max: i64,
+    pub normal_operating_min: i64,
+    pub normal_operating_max: i64,
 }

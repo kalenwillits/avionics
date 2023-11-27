@@ -18,9 +18,10 @@ use database::resources::Database;
 const STEAM_DECK_RESOLUTION: (f32, f32) = (1280f32, 800f32);
 
 fn main() {
-    let database_resource = database::connect();
+    let database = database::connect();
     App::new()
-        .insert_resource(database_resource)
+        .insert_resource(database)
+        .add_systems(Startup, mock_data.before(setup))
         .add_systems(Startup, setup)
         .add_plugins((
             DefaultPlugins.set(WindowPlugin {
@@ -46,8 +47,7 @@ fn main() {
         .run();
 }
 
-fn setup(mut commands: Commands, database: Res<Database>) {
-    commands.spawn(Camera2dBundle::default());
+fn mock_data(database: Res<Database>) {
     // Temporary hard coded configuration settings ---------------------------
     database.connection.execute("DELETE FROM CONFIG").unwrap();
     database.connection.execute("DELETE FROM AIRCRAFT").unwrap();
@@ -61,8 +61,12 @@ fn setup(mut commands: Commands, database: Res<Database>) {
         .connection
         .execute("INSERT INTO AIRCRAFT ( CALLSIGN, MAKE, MODEL) VALUES ( 'N135TS', 'Vans', 'RV12')")
         .unwrap();
-    database.connection.execute("INSERT INTO ENGINE ( MAKE, MODEL, RPM_MIN, RPM_MAX, AIRCRAFT) VALUES ( 'Rotax', '912ULS', 0, 5800, (SELECT MAX(PK) FROM AIRCRAFT))").unwrap();
+    database.connection.execute("INSERT INTO ENGINE ( MAKE, MODEL, RPM_MIN, RPM_MAX, NORMAL_OPERATING_MIN, NORMAL_OPERATING_MAX, AIRCRAFT) VALUES ( 'Rotax', '912ULS', 0, 5800, 1400, 5300, (SELECT MAX(PK) FROM AIRCRAFT))").unwrap();
     // -----------------------------------------------------------------------
+}
+
+fn setup(mut commands: Commands, database: Res<Database>) {
+    commands.spawn(Camera2dBundle::default());
     if let Some(config_result) = database
         .connection
         .prepare("SELECT COUNT(1) AS config_count FROM CONFIG")

@@ -51,10 +51,19 @@ pub fn spawn_panel_left(
                         .unwrap();
                     let mut engine_index: usize = 0;
                     while let Ok(sqlite::State::Row) = statement.next() {
-                        let min_rpm = statement.read::<i64, _>("RPM_MIN").unwrap();
-                        let max_rpm = statement.read::<i64, _>("RPM_MAX").unwrap();
+                        let rpm_min = statement.read::<i64, _>("RPM_MIN").unwrap();
+                        let rpm_max = statement.read::<i64, _>("RPM_MAX").unwrap();
+                        let normal_operating_min =
+                            statement.read::<i64, _>("NORMAL_OPERATING_MIN").unwrap();
+                        let normal_operating_max =
+                            statement.read::<i64, _>("NORMAL_OPERATING_MAX").unwrap();
                         let engine_component = match engine_index {
-                            0 => EngineOne { min_rpm, max_rpm },
+                            0 => EngineOne {
+                                rpm_min,
+                                rpm_max,
+                                normal_operating_min,
+                                normal_operating_max,
+                            },
                             _ => panic!("Unsupported number of engines!"),
                         };
                         parent
@@ -148,6 +157,30 @@ pub fn spawn_panel_left(
                                         ..default()
                                     })
                                     .with_children(|parent| {
+                                        parent.spawn(NodeBundle {
+                                            style: Style {
+                                                width: Val::Percent(
+                                                    ((normal_operating_max as f32
+                                                        / rpm_max as f32)
+                                                        - (normal_operating_min as f32
+                                                            / rpm_max as f32))
+                                                        * 100.0,
+                                                ),
+                                                height: Val::Px(4.0),
+                                                left: Val::Percent(
+                                                    (normal_operating_min as f32 / rpm_max as f32)
+                                                        * 100.0,
+                                                ),
+                                                flex_direction: FlexDirection::Column,
+                                                justify_content: JustifyContent::Center,
+                                                align_items: AlignItems::Start,
+                                                position_type: PositionType::Absolute,
+                                                ..default()
+                                            },
+                                            background_color: Color::GREEN.into(),
+                                            ..default()
+                                        });
+
                                         parent
                                             .spawn((
                                                 TachometerNeedle {},
@@ -158,6 +191,7 @@ pub fn spawn_panel_left(
                                                         position_type: PositionType::Absolute,
                                                         ..default()
                                                     },
+                                                    z_index: ZIndex::Global(4),
                                                     background_color: Color::WHITE.into(),
                                                     ..default()
                                                 },
@@ -191,6 +225,6 @@ pub fn update_engine_one_tachometer(
     for (mut tachometer_needle_style, engine_one) in
         engine_one_tachometer_needle_queryset.iter_mut()
     {
-        tachometer_needle_style.left = Val::Percent((value / engine_one.max_rpm as f32) * 100.0);
+        tachometer_needle_style.left = Val::Percent((value / engine_one.rpm_max as f32) * 100.0);
     }
 }
