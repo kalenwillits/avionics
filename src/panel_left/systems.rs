@@ -38,9 +38,6 @@ pub fn spawn_panel_left(
                     PanelLeft {},
                 ))
                 .with_children(|parent| {
-                    // TODO - Switch loop to TOML
-                    // let mut engine_index: usize = 0;
-                    // while let Ok(sqlite::State::Row) = statement.next() {
                     //     let rpm_min = statement.read::<i64, _>("RPM_MIN").unwrap();
                     //     let rpm_max = statement.read::<i64, _>("RPM_MAX").unwrap();
                     //     let normal_operating_min =
@@ -189,8 +186,6 @@ pub fn spawn_panel_left(
                     //                         .insert(engine_component);
                     //                 });
                     //         });
-                    //     engine_index += 1;
-                    // }
                 });
         });
 }

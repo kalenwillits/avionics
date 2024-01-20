@@ -7,6 +7,7 @@ mod panel_left;
 mod panel_right;
 mod turn_coordinator;
 mod vertical_speed_indicator;
+mod profiles;
 
 mod utils;
 mod xplane_listener;
@@ -28,6 +29,7 @@ fn main() {
                 }),
                 ..default()
             }),
+            profiles::ProfilesPlugin,
             xplane_listener::XPlaneListener,
             artificial_horizon::ArtificialHorizonPlugin,
             bank_angle_indicator::BankAngleIndicatorPlugin,
@@ -41,6 +43,7 @@ fn main() {
         ))
         .run();
 }
+
 
 
 fn setup(mut commands: Commands) {
