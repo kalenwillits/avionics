@@ -3,9 +3,6 @@ mod altimeter;
 mod artificial_horizon;
 mod bank_angle_indicator;
 mod heading_indicator;
-mod panel_left;
-mod panel_right;
-mod profiles;
 mod turn_coordinator;
 mod vertical_speed_indicator;
 
@@ -29,7 +26,6 @@ fn main() {
                 }),
                 ..default()
             }),
-            profiles::ProfilesPlugin,
             xplane_listener::XPlaneListener,
             artificial_horizon::ArtificialHorizonPlugin,
             bank_angle_indicator::BankAngleIndicatorPlugin,
@@ -38,8 +34,6 @@ fn main() {
             turn_coordinator::TurnCoordinatorPlugin,
             altimeter::AltimeterPlugin,
             heading_indicator::HeadingIndicatorPlugin,
-            panel_left::PanelLeftPlugin,
-            panel_right::PanelRightPlugin,
         ))
         .run();
 }
