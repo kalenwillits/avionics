@@ -1,0 +1,75 @@
+[engine_one]
+enabled = false
+
+[engine_one.range]
+min = 0
+max = 5800
+
+[engine_one.normal]
+min = 2000
+max = 5500
+
+[engine_one.warning]
+min = 0
+max = 0
+
+[engine_one.danger]
+min = 0
+max = 0
+
+[engine_two]
+enabled = false
+
+[engine_two.range]
+min = 0
+max = 0
+
+[engine_two.normal]
+min = 0
+max = 0
+
+[engine_two.warning]
+min = 0
+max = 0
+
+[engine_two.danger]
+min = 0
+max = 0
+
+[engine_three]
+enabled = false
+
+[engine_three.range]
+min = 0
+max = 0
+
+[engine_three.normal]
+min = 0
+max = 0
+
+[engine_three.warning]
+min = 0
+max = 0
+
+[engine_three.danger]
+min = 0
+max = 0
+
+[engine_four]
+enabled = false
+
+[engine_four.range]
+min = 0
+max = 0
+
+[engine_four.normal]
+min = 0
+max = 0
+
+[engine_four.warning]
+min = 0
+max = 0
+
+[engine_four.danger]
+min = 0
+max = 0
