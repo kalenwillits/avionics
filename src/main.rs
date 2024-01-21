@@ -5,9 +5,9 @@ mod bank_angle_indicator;
 mod heading_indicator;
 mod panel_left;
 mod panel_right;
+mod profiles;
 mod turn_coordinator;
 mod vertical_speed_indicator;
-mod profiles;
 
 mod utils;
 mod xplane_listener;
@@ -43,8 +43,6 @@ fn main() {
         ))
         .run();
 }
-
-
 
 fn setup(mut commands: Commands) {
     commands.spawn(Camera2dBundle::default());

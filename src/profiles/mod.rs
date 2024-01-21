@@ -1,15 +1,13 @@
 use bevy::prelude::*;
 
-pub mod systems;
-pub mod resources;
+pub mod components;
 pub mod settings;
+pub mod systems;
 
 pub struct ProfilesPlugin;
 
-
 impl Plugin for ProfilesPlugin {
     fn build(&self, app: &mut App) {
-       app.insert_resource(resources::Profile { ..default() })
-           .add_systems(Startup, systems::load_profile);
+        app.add_systems(Startup, systems::load_profile);
     }
 }

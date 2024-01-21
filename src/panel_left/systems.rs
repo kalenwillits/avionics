@@ -2,10 +2,7 @@ use super::components::{EngineOne, PanelLeft, TachometerNeedle, TachometerValue}
 use crate::xplane_listener::AircraftState;
 use bevy::prelude::*;
 
-pub fn spawn_panel_left(
-    mut commands: Commands,
-    asset_server: Res<AssetServer>,
-) {
+pub fn spawn_panel_left(mut commands: Commands, asset_server: Res<AssetServer>) {
     commands
         .spawn(NodeBundle {
             style: Style {
